@@ -9,6 +9,6 @@
 <AnchorPane id="AnchorPane" prefHeight="220.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dochniak_krupa.SignInWindowController">
     <Button id="btn" layoutX="144.0" layoutY="167.0" mnemonicParsing="false" onMouseClicked="#onSignInBtnClick" text="Sign In" />
     <TextField fx:id="loginTxtField" layoutX="96.0" layoutY="84.0" promptText="Login" />
-    <PasswordField fx:id="passwordTxtField" layoutX="96.0" layoutY="110.0" promptText="Passowrd" />
+    <PasswordField fx:id="passwordTxtField" layoutX="96.0" layoutY="110.0" promptText="Password" />
     <ChoiceBox id="typeOfAccountChoiceBox" fx:id="typeOfAccountChoiceBox" accessibleHelp="Select your account type" layoutX="95.0" layoutY="37.0" prefWidth="150.0" />
 </AnchorPane>
