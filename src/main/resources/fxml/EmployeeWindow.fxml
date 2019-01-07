@@ -4,6 +4,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
@@ -17,15 +18,15 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="381.0" prefWidth="645.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <tabs>
-        <Tab text="Add/Uptade Client">
+        <Tab text="Add Client">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <ScrollPane layoutX="7.0" layoutY="3.0" prefHeight="362.0" prefWidth="586.0">
+                        <ScrollPane layoutX="7.0" layoutY="3.0" prefHeight="362.0" prefWidth="634.0">
                             <content>
-                                <GridPane prefHeight="349.0" prefWidth="566.0">
+                                <GridPane prefHeight="341.0" prefWidth="623.0">
                                     <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="276.5999755859375" minWidth="10.0" prefWidth="100.5999755859375" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="465.4000244140625" minWidth="10.0" prefWidth="465.4000244140625" />
@@ -57,8 +58,8 @@
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField GridPane.columnIndex="1" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <TextField prefWidth="502.0" GridPane.columnIndex="1" />
+                              <TextField prefWidth="478.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                     </children>
                                 </GridPane>
@@ -78,29 +79,77 @@
                 </AnchorPane>
             </content>
         </Tab>
-      <Tab text="Cards">
+      <Tab text="Update Client">
          <content>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <TextField layoutX="13.0" layoutY="58.0" prefHeight="35.0" prefWidth="234.0" promptText="Account number" />
-                  <CheckBox layoutX="14.0" layoutY="100.0" mnemonicParsing="false" text="Credit Card" />
-                  <CheckBox layoutX="14.0" layoutY="127.0" mnemonicParsing="false" text="Debit Card" />
-                  <Button layoutX="70.0" layoutY="153.0" mnemonicParsing="false" text="Generate Card Data" />
-                  <Separator layoutX="297.0" layoutY="6.0" orientation="VERTICAL" prefHeight="357.0" prefWidth="0.0" />
-                  <Label layoutX="69.0" layoutY="14.0" prefHeight="31.0" prefWidth="114.0" text="GENERATE">
-                     <font>
-                        <Font name="System Bold Italic" size="21.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="404.0" layoutY="14.0" prefHeight="31.0" prefWidth="75.0" text="DELETE">
-                     <font>
-                        <Font name="System Bold Italic" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="318.0" layoutY="58.0" prefHeight="35.0" prefWidth="234.0" promptText="Card number" />
-                  <Button layoutX="396.0" layoutY="147.0" mnemonicParsing="false" text="Delete Card" />
+                  <ScrollPane layoutX="7.0" layoutY="3.0" prefHeight="362.0" prefWidth="634.0">
+                     <content>
+                        <GridPane prefHeight="335.0" prefWidth="630.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="276.5999755859375" minWidth="10.0" prefWidth="100.5999755859375" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="465.4000244140625" minWidth="10.0" prefWidth="465.4000244140625" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Account type:" GridPane.rowIndex="2" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="First name:" GridPane.rowIndex="3" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Last name:" GridPane.rowIndex="4" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Birthdate:" GridPane.rowIndex="5" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Phone number:" GridPane.rowIndex="6" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Email:" GridPane.rowIndex="7" />
+                              <Label prefHeight="18.0" prefWidth="274.0" GridPane.rowIndex="9" />
+                              <Label prefHeight="18.0" prefWidth="274.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="PESEL:" GridPane.rowIndex="1" />
+                              <Button mnemonicParsing="false" text="Save" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField prefHeight="27.0" prefWidth="483.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <Label text="Account number:" />
+                              <TextField prefWidth="484.0" GridPane.columnIndex="1" />
+                              <Label text="Login:" GridPane.rowIndex="8" />
+                              <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                              <Label text="Password:" GridPane.rowIndex="9" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                           </children>
+                        </GridPane>
+                     </content>
+                  </ScrollPane>
                </children>
-            </Pane>
+            </AnchorPane>
+         </content>
+      </Tab>
+      <Tab text="Client Search">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="16.0" layoutY="4.0" prefHeight="28.0" prefWidth="171.0" text="Searching parameters" />
+                  <Button layoutX="17.0" layoutY="173.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="170.0" text="Search" />
+                  <Separator layoutX="194.0" layoutY="9.0" orientation="VERTICAL" prefHeight="356.0" prefWidth="9.0" />
+                  <TextField layoutX="15.0" layoutY="104.0" prefHeight="26.0" prefWidth="172.0" promptText="First name" />
+                  <TextField layoutX="16.0" layoutY="139.0" prefHeight="26.0" prefWidth="172.0" promptText="Last name" />
+                  <TextField layoutX="16.0" layoutY="32.0" prefHeight="26.0" prefWidth="172.0" promptText="Account number" />
+                  <TextField layoutX="16.0" layoutY="68.0" prefHeight="26.0" prefWidth="172.0" promptText="PESEL" />
+                  <TextArea layoutX="201.0" layoutY="2.0" prefHeight="363.0" prefWidth="439.0" wrapText="true" />
+               </children>
+            </AnchorPane>
          </content>
       </Tab>
         <Tab text="Account Balance">
@@ -136,19 +185,45 @@
                         <Label layoutX="16.0" layoutY="4.0" prefHeight="28.0" prefWidth="171.0" text="Searching parameters" />
                         <Button layoutX="16.0" layoutY="197.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="170.0" text="Search" />
                         <Separator layoutX="194.0" layoutY="9.0" orientation="VERTICAL" prefHeight="356.0" prefWidth="9.0" />
-                        <TextArea layoutX="203.0" layoutY="6.0" prefHeight="355.0" prefWidth="386.0" />
-                  <TextField layoutX="15.0" layoutY="104.0" prefHeight="26.0" prefWidth="172.0" promptText="Another account number" />
+                        <TextArea layoutX="202.0" layoutY="6.0" prefHeight="355.0" prefWidth="438.0" />
+                  <TextField layoutX="15.0" layoutY="104.0" prefHeight="26.0" prefWidth="172.0" promptText="Sender account number" />
+                  <TextField layoutX="16.0" layoutY="139.0" prefHeight="26.0" prefWidth="172.0" promptText="Receiver account number" />
                     </children>
                 </AnchorPane>
             </content>
         </Tab>
-      <Tab text="My account">
+      <Tab text="Cards">
+         <content>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TextField layoutX="13.0" layoutY="58.0" prefHeight="35.0" prefWidth="234.0" promptText="Account number" />
+                  <CheckBox layoutX="14.0" layoutY="100.0" mnemonicParsing="false" text="Credit Card" />
+                  <CheckBox layoutX="14.0" layoutY="127.0" mnemonicParsing="false" text="Debit Card" />
+                  <Button layoutX="70.0" layoutY="153.0" mnemonicParsing="false" text="Generate Card Data" />
+                  <Separator layoutX="297.0" layoutY="6.0" orientation="VERTICAL" prefHeight="357.0" prefWidth="0.0" />
+                  <Label layoutX="69.0" layoutY="14.0" prefHeight="31.0" prefWidth="114.0" text="GENERATE">
+                     <font>
+                        <Font name="System Bold Italic" size="21.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="404.0" layoutY="14.0" prefHeight="31.0" prefWidth="75.0" text="DELETE">
+                     <font>
+                        <Font name="System Bold Italic" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField layoutX="318.0" layoutY="58.0" prefHeight="35.0" prefWidth="234.0" promptText="Card number" />
+                  <Button layoutX="396.0" layoutY="147.0" mnemonicParsing="false" text="Delete Card" />
+               </children>
+            </Pane>
+         </content>
+      </Tab>
+      <Tab text="My Account">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <ScrollPane layoutX="7.0" layoutY="3.0" prefHeight="362.0" prefWidth="586.0">
+                  <ScrollPane layoutX="7.0" layoutY="3.0" prefHeight="362.0" prefWidth="625.0">
                      <content>
-                        <GridPane prefHeight="420.0" prefWidth="566.0">
+                        <GridPane prefHeight="334.0" prefWidth="623.0">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="276.5999755859375" minWidth="10.0" prefWidth="100.5999755859375" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="465.4000244140625" minWidth="10.0" prefWidth="465.4000244140625" />
@@ -162,27 +237,30 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="69.80001220703124" minHeight="8.800009155273443" prefHeight="27.399987792968744" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="131.99999084472654" minHeight="10.0" prefHeight="26.59998779296876" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="131.99999084472654" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <Label prefHeight="18.0" prefWidth="274.0" text="Phone number:" />
-                              <Label prefHeight="18.0" prefWidth="274.0" text="Email:" GridPane.rowIndex="1" />
-                              <Label prefHeight="18.0" prefWidth="274.0" text="Adress:" GridPane.rowIndex="2" />
-                              <Label prefHeight="18.0" prefWidth="274.0" text="Postal code:" GridPane.rowIndex="3" />
-                              <Label prefHeight="18.0" prefWidth="274.0" text="City:" GridPane.rowIndex="4" />
-                              <Label prefHeight="18.0" prefWidth="274.0" text="Country:" GridPane.rowIndex="5" />
-                              <Label prefHeight="18.0" prefWidth="274.0" text="Login:" GridPane.rowIndex="6" />
-                              <Label prefHeight="18.0" prefWidth="274.0" text="Password:" GridPane.rowIndex="7" />
-                              <Button mnemonicParsing="false" text="Save" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField GridPane.columnIndex="1" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Phone number:" GridPane.rowIndex="5" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Email:" GridPane.rowIndex="6" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Login:" GridPane.rowIndex="7" />
+                              <Label prefHeight="18.0" prefWidth="274.0" text="Password:" GridPane.rowIndex="8" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                              <PasswordField prefHeight="18.0" prefWidth="466.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField editable="false" prefHeight="25.0" prefWidth="488.0" GridPane.columnIndex="1" />
+                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Save" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+                              <Label text="Id:" />
+                              <Label text="PESEL:" GridPane.rowIndex="1" />
+                              <Label text="First name:" GridPane.rowIndex="2" />
+                              <Label text="Last name:" GridPane.rowIndex="3" />
+                              <Label text="Birthdate:" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                      </content>

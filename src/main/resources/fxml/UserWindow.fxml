@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
@@ -88,7 +89,7 @@
             </AnchorPane>
         </content>
       </Tab>
-      <Tab text="Client Data">
+      <Tab text="My Account">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -127,16 +128,16 @@
                               <Label prefHeight="18.0" prefWidth="274.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                               <Label prefHeight="18.0" prefWidth="274.0" text="Account number:" />
                               <Button mnemonicParsing="false" text="Save" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="7" />
                               <TextField GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                              <TextField GridPane.columnIndex="1" />
+                              <TextField editable="false" GridPane.columnIndex="1" />
+                              <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="9" />
                            </children>
                         </GridPane>
                      </content>
