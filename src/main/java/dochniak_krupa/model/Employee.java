@@ -44,7 +44,9 @@ public class Employee {
     @NotNull
     private String position;
 
-    //access?
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private AccountType accountType;
 
     @NotNull
     private BigInteger salary;

@@ -1,8 +1,6 @@
 package dochniak_krupa.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -10,9 +8,12 @@ import javax.validation.constraints.Size;
 @Table(name = "establishment")
 public class Establishment {
 
-    //id
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private int id;
 
-    //Director id
+    @NotNull
+    private int directorId;
 
     @NotNull
     @Column(length = 60)
@@ -30,6 +31,22 @@ public class Establishment {
     @Column(length = 2, name = "country")
     @Size(min = 2, max=2)
     private String country;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getDirectorId() {
+        return directorId;
+    }
+
+    public void setDirectorId(int directorId) {
+        this.directorId = directorId;
+    }
 
     public String getAdress() {
         return adress;
