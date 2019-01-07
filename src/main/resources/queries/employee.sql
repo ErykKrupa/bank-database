@@ -9,9 +9,9 @@ create table employee
   phone_number     char(9) unique                      not null,
   email            varchar(60) unique,
   position         varchar(40)                         not null,
-  access           enum ('common', 'manager', 'admin') not null default 'common',
+  access           varchar(40)                         not null default 'common', /*common, manager, admin*/
   salary           bigint                              not null,
-  establishment_id int                                 not null,
+  establishment_id int                                 not null, /*foreign key*/
   login            varchar(30) unique                  not null,
   password         varchar(30)                         not null,
   is_working       bool                                not null default true,

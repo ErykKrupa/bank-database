@@ -3,7 +3,7 @@ create table client
 (
   account_number char(26) primary key,
   pesel          char(11) unique,
-  account_type   enum ('standard', 'for_kids') not null default 'standard',
+  account_type   varchar(40)                   not null default 'standard',
   first_name     varchar(40)                   not null,
   last_name      varchar(40)                   not null,
   birth_date     date                          not null,
@@ -15,5 +15,3 @@ create table client
   log_time       datetime                      not null default now()
 );
 select * from client;
-
-
