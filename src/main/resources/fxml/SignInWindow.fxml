@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="220.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dochniak_krupa.SignInWindowController">
+<AnchorPane id="AnchorPane" prefHeight="220.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dochniak_krupa.controller.SignInWindowController">
     <Button id="btn" layoutX="144.0" layoutY="167.0" mnemonicParsing="false" onMouseClicked="#onSignInBtnClick" text="Sign In" />
     <TextField fx:id="loginTxtField" layoutX="96.0" layoutY="84.0" promptText="Login" />
     <PasswordField fx:id="passwordTxtField" layoutX="96.0" layoutY="110.0" promptText="Password" />

@@ -1,4 +1,4 @@
-package dochniak_krupa;
+package dochniak_krupa.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

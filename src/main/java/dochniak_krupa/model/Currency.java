@@ -19,15 +19,9 @@ public class Currency {
     @Size(max=30)
     private String name;
 
-    @Column(name = "exhange_to_dollar")
+    @Column(name = "exchange_to_dollar")
     @NotNull
     private BigInteger exchangeToDollar;
-
-    public Currency(@Size(min = 3, max = 3) String iso, @NotNull @Size(max = 13) String name, BigInteger exchangeToDollar) {
-        this.iso = iso;
-        this.name = name;
-        this.exchangeToDollar = exchangeToDollar;
-    }
 
     public String getIso() {
         return iso;
