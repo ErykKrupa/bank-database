@@ -46,7 +46,7 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private AccountType accountType;
+    private AccessType access;
 
     @NotNull
     private BigInteger salary;

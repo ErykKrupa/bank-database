@@ -27,7 +27,7 @@ public class SignInWindowController implements Initializable {
         try{
             Parent p = FXMLLoader.load(getClass().getResource("/fxml/EmployeeWindow.fxml"));
             Stage stage = new Stage();
-            stage.setTitle("User banking app");
+            stage.setTitle("Banking app");
             stage.setScene(new Scene(p));
             stage.show();
         }catch (Exception e){
