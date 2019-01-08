@@ -7,7 +7,7 @@ create table credit_card
   expiry_date       date           not null,
   funds_limit       bigint         not null,
   used_funds        bigint         not null default 0,
-  lending_rate      decimal(19, 4) not null,
+  lending_rate      bigint         not null,
   constraint foreign key (account_number)
   references client (account_number)
 );

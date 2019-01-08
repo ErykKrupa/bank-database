@@ -7,76 +7,77 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "establishment")
 public class Establishment {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private int id;
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+	@Column(name = "directorId", unique = true)
+	@NotNull
+	private int directorId;
 
-    @NotNull
-    private int directorId;
+	@Column(name = "address", length = 60)
+	@NotNull
+	private String address;
 
-    @NotNull
-    @Column(length = 60)
-    private String adress;
+	@Column(name = "postal_code", length = 10)
+	@NotNull
+	private String postalCode;
 
-    @NotNull//length 5?
-    @Column(length = 10, name = "postal_code")
-    private String postalCode;
+	@Column(name = "city", length = 40)
+	@NotNull
+	private String city;
 
-    @NotNull
-    @Column(length = 40, name = "city")
-    private String city;
+	@Column(name = "country", columnDefinition = "char(3)")
+	@NotNull
+	@Size(min = 2, max = 2)
+	private String country;
 
-    @NotNull
-    @Column(length = 2, name = "country")
-    @Size(min = 2, max=2)
-    private String country;
+	public int getId() {
+		return id;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getDirectorId() {
+		return directorId;
+	}
 
-    public int getDirectorId() {
-        return directorId;
-    }
+	public void setDirectorId(int directorId) {
+		this.directorId = directorId;
+	}
 
-    public void setDirectorId(int directorId) {
-        this.directorId = directorId;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public String getAdress() {
-        return adress;
-    }
+	public void setAddress(String adress) {
+		this.address = adress;
+	}
 
-    public void setAdress(String adress) {
-        this.adress = adress;
-    }
+	public String getPostalCode() {
+		return postalCode;
+	}
 
-    public String getPostalCode() {
-        return postalCode;
-    }
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
+	public String getCity() {
+		return city;
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public String getCountry() {
+		return country;
+	}
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	public void setCountry(String country) {
+		this.country = country;
+	}
 }
