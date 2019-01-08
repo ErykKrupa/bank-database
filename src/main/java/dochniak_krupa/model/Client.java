@@ -9,15 +9,14 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "client")
 public class Client {
   @Id
-  @Column(name = "account_number", columnDefinition = "char(26)")
-  @Size(max = 26, min = 26)
+  @Column(name = "account_number")
+  @Size(max = 26)
   private String accountNumber;
 
-  @Column(name = "pesel", columnDefinition = "char(11)", unique = true)
-  @Size(min = 11, max = 11)
+  @Column(unique = true)
+  @Size(max = 11)
   private String pesel;
 
   @Enumerated(EnumType.STRING)
@@ -25,35 +24,39 @@ public class Client {
   @NotNull
   private AccountType accountType;
 
-  @Column(name = "first_name", length = 40)
+  @Column(name = "first_name")
   @NotNull
+  @Size(max = 40)
   private String firstName;
 
-  @Column(name = "last_name", length = 40)
+  @Column(name = "last_name")
   @NotNull
+  @Size(max = 40)
   private String lastName;
 
   @Column(name = "birth_date")
   @NotNull
-  private Date birth_date;
+  private Date birthDate;
 
-  @Column(name = "phone_number", columnDefinition = "char(9)", unique = true)
+  @Column(name = "phone_number", unique = true)
   @NotNull
-  @Size(min = 9, max = 9)
+  @Size(max = 9)
   private String phoneNumber;
 
-  @Column(length = 60, unique = true)
+  @Column(unique = true)
+  @Size(max = 60)
   private String email;
 
-  @Column(length = 30, unique = true)
+  @Column(unique = true)
   @NotNull
+  @Size(max = 30)
   private String login;
 
-  @Column(length = 30)
   @NotNull
+  @Size(max = 30)
   private String password;
 
-  @Column(name = "is_active", columnDefinition = "TINYINT(1)")
+  @Column(name = "is_active")
   @NotNull
   private boolean isActive;
 
@@ -101,12 +104,12 @@ public class Client {
     this.lastName = lastName;
   }
 
-  public Date getBirth_date() {
-    return birth_date;
+  public Date getBirthDate() {
+    return birthDate;
   }
 
-  public void setBirth_date(Date birth_date) {
-    this.birth_date = birth_date;
+  public void setBirthDate(Date birthDate) {
+    this.birthDate = birthDate;
   }
 
   public String getPhoneNumber() {

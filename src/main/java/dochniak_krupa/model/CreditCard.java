@@ -10,18 +10,14 @@ import java.sql.Date;
 @Table(name = "credit_card")
 public class CreditCard {
   @Id
-  @Column(columnDefinition = "char(16)")
-  @Size(min = 16, max = 16)
+  @Size(max = 16)
   private String number;
 
-  @Column(name = "account_number")
-  @NotNull
-  @ManyToOne
-  Client client;
+  @NotNull @ManyToOne Client client;
 
-  @Column(name = "card_verification", columnDefinition = "char(3)")
+  @Column(name = "card_verification")
   @NotNull
-  @Size(min = 3, max = 3)
+  @Size(max = 3)
   private String cardVerification;
 
   @Column(name = "expiry_date")

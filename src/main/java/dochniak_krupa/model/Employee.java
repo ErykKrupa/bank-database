@@ -1,5 +1,7 @@
 package dochniak_krupa.model;
 
+import dochniak_krupa.model.enum_type.AccessType;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -8,63 +10,58 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "employee")
 public class Employee {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id")
   private int id;
 
-  @Column(name = "pesel", columnDefinition = "char(11)", unique = true)
-  @Size(min = 11, max = 11)
+  @Column(unique = true)
+  @Size(max = 11)
   private String pesel;
 
-  @Column(name = "first_name", length = 40)
+  @Column(name = "first_name")
   @NotNull
+  @Size(max = 40)
   private String firstName;
 
-  @Column(name = "last_name", length = 40)
+  @Column(name = "last_name")
   @NotNull
+  @Size(max = 11)
   private String lastName;
 
-  @Column(name = "birth_date")
-  @NotNull
-  private Date birth_date;
+  @NotNull private Date birthDate;
 
-  @Column(name = "phone_number", columnDefinition = "char(9)", unique = true)
-  @Size(min = 9, max = 9)
+  @Column(name = "phone_number", unique = true)
+  @NotNull
+  @Size(max = 9)
   private String phoneNumber;
 
-  @Column(name = "email", length = 60, unique = true)
+  @Column(unique = true)
+  @Size(max = 60)
   private String email;
 
-  @Column(name = "position", length = 40)
   @NotNull
+  @Size(max = 40)
   private String position;
 
-  @Column(name = "access")
   @Enumerated(EnumType.STRING)
   @NotNull
   private AccessType access;
 
-  @Column(name = "salary")
-  @NotNull
-  private BigInteger salary;
+  @NotNull private BigInteger salary;
 
-  @Column(name = "establishment_id")
-  @NotNull
-  @ManyToOne
-  private Establishment establishment;
+  @NotNull @ManyToOne private Establishment establishment;
 
-  @Column(name = "login", length = 30, unique = true)
+  @Column(unique = true)
   @NotNull
+  @Size(max = 30)
   private String login;
 
-  @Column(name = "password", length = 30)
   @NotNull
+  @Size(max = 30)
   private String password;
 
-  @Column(name = "is_working", columnDefinition = "TINYINT(1)")
+  @Column(name = "is_working")
   @NotNull
   private boolean isWorking;
 
@@ -104,12 +101,12 @@ public class Employee {
     this.lastName = lastName;
   }
 
-  public Date getBirth_date() {
-    return birth_date;
+  public Date getBirthDate() {
+    return birthDate;
   }
 
-  public void setBirth_date(Date birth_date) {
-    this.birth_date = birth_date;
+  public void setBirthDate(Date birth_date) {
+    this.birthDate = birth_date;
   }
 
   public String getPhoneNumber() {
@@ -150,6 +147,14 @@ public class Employee {
 
   public void setSalary(BigInteger salary) {
     this.salary = salary;
+  }
+
+  public Establishment getEstablishment() {
+    return establishment;
+  }
+
+  public void setEstablishment(Establishment establishment) {
+    this.establishment = establishment;
   }
 
   public String getLogin() {
