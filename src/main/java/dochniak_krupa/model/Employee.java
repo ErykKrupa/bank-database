@@ -10,67 +10,65 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name="employee")
+@Table(name = "employee")
 public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private String id;
 
-    @Column(columnDefinition = "char(11)")
-    @NotNull
-    @Size(min=11, max=11)
-    private String pesel;
+  @Column(columnDefinition = "char(11)")
+  @NotNull
+  @Size(min = 11, max = 11)
+  private String pesel;
 
-    @Column(name="first_name",length = 40)
-    @NotNull
-    private String firstName;
+  @Column(name = "first_name", length = 40)
+  @NotNull
+  private String firstName;
 
-    @Column(name="last_name",length = 40)
-    @NotNull
-    private String lastName;
+  @Column(name = "last_name", length = 40)
+  @NotNull
+  private String lastName;
 
-    @Column(name="birth_date")
-    @NotNull
-    private Date birth_date;
+  @Column(name = "birth_date")
+  @NotNull
+  private Date birth_date;
 
-    @Column(name="phone_number", columnDefinition = "char(9)")
-    @Size(min=9, max=9)
-    private String phoneNumber;
+  @Column(name = "phone_number", columnDefinition = "char(9)")
+  @Size(min = 9, max = 9)
+  private String phoneNumber;
 
-    @Column(length = 60)
-    private String email;
+  @Column(length = 60)
+  private String email;
 
-    @Column(length = 40)
-    @NotNull
-    private String position;
+  @Column(length = 40)
+  @NotNull
+  private String position;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private AccessType access;
+  @Enumerated(EnumType.STRING)
+  @NotNull
+  private AccessType access;
 
-    @NotNull
-    private BigInteger salary;
+  @NotNull private BigInteger salary;
 
-    @Column(name = "employment_date")
-    @NotNull
-    private Date employmentDate;
+  @Column(name = "employment_date")
+  @NotNull
+  private Date employmentDate;
 
-    @ManyToOne
-    private Establishment establishment;
+  @ManyToOne private Establishment establishment;
 
-    @Column(length = 30)
-    @NotNull
-    private String login;
+  @Column(length = 30)
+  @NotNull
+  private String login;
 
-    @Column(length = 30)
-    @NotNull
-    private String password;
+  @Column(length = 30)
+  @NotNull
+  private String password;
 
-    @Column(name="is_working",columnDefinition = "TINYINT(1)")
-    @NotNull
-    private boolean isWorking;
+  @Column(name = "is_working", columnDefinition = "TINYINT(1)")
+  @NotNull
+  private boolean isWorking;
 
-    @Column(name="log_time")
-    @NotNull
-    private Timestamp logTime;
+  @Column(name = "log_time")
+  @NotNull
+  private Timestamp logTime;
 }

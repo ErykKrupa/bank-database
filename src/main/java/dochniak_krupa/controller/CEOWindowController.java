@@ -1,4 +1,3 @@
 package dochniak_krupa.controller;
 
-public class CEOWindowController {
-}
+public class CEOWindowController {}

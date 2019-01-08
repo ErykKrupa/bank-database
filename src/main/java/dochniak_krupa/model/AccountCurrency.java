@@ -7,14 +7,11 @@ import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
 @Entity
-@Table(name="account_currency")
+@Table(name = "account_currency")
 public class AccountCurrency {
-    @EmbeddedId
-    AccountCurrencyId accountCurrencyId;
+  @EmbeddedId AccountCurrencyId accountCurrencyId;
 
-    @NotNull
-    private BigInteger balance;
+  @NotNull private BigInteger balance;
 
-    @NotNull
-    private BigInteger lendingRate;
+  @NotNull private BigInteger lendingRate;
 }

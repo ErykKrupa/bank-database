@@ -1,6 +1,3 @@
 package dochniak_krupa.controller;
 
-public class UserWindowController{
-
-}
-
+public class UserWindowController {}

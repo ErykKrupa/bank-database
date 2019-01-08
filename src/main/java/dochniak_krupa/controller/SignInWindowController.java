@@ -14,34 +14,31 @@ import java.util.ResourceBundle;
 
 public class SignInWindowController implements Initializable {
 
-    @FXML
-    private TextField loginTxtField;
-    @FXML
-    private TextField passwordTxtField;
-    @FXML
-    private ChoiceBox<String> typeOfAccountChoiceBox;
+  @FXML private TextField loginTxtField;
+  @FXML private TextField passwordTxtField;
+  @FXML private ChoiceBox<String> typeOfAccountChoiceBox;
 
-    @FXML
-    private void onSignInBtnClick() {
-        //todo validation
-        try{
-            Parent p = FXMLLoader.load(getClass().getResource("/fxml/EmployeeWindow.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Banking app");
-            stage.setScene(new Scene(p));
-            stage.show();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+  @FXML
+  private void onSignInBtnClick() {
+    // todo validation
+    try {
+      Parent p = FXMLLoader.load(getClass().getResource("/fxml/EmployeeWindow.fxml"));
+      Stage stage = new Stage();
+      stage.setTitle("Banking app");
+      stage.setScene(new Scene(p));
+      stage.show();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadCheckboxData();
-    }
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    loadCheckboxData();
+  }
 
-    private void loadCheckboxData(){
-        typeOfAccountChoiceBox.setValue("User");
-        typeOfAccountChoiceBox.getItems().addAll("User","Worker");
-    }
+  private void loadCheckboxData() {
+    typeOfAccountChoiceBox.setValue("User");
+    typeOfAccountChoiceBox.getItems().addAll("User", "Worker");
+  }
 }
