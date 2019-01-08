@@ -18,5 +18,18 @@
         <property name="hibernate.connection.password">
             root123
         </property>
+
+        <property name="hibernate.id.new_generator_mappings">false</property>
+
+        <!-- Class annotating -->
+        <mapping class="dochniak_krupa.model.AccountCurrency"/>
+        <mapping class="dochniak_krupa.model.Client"/>
+        <mapping class="dochniak_krupa.model.CreditCard"/>
+        <mapping class="dochniak_krupa.model.Currency"/>
+        <mapping class="dochniak_krupa.model.DebitCard"/>
+        <mapping class="dochniak_krupa.model.Employee"/>
+        <mapping class="dochniak_krupa.model.Establishment"/>
+        <mapping class="dochniak_krupa.model.TransferLog"/>
+
     </session-factory>
 </hibernate-configuration>

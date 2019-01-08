@@ -5,32 +5,30 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "establishment")
 public class Establishment {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id")
   private int id;
 
-  @Column(name = "directorId", unique = true)
+  @Column(name = "director_id", unique = true)
   @NotNull
   private int directorId;
 
-  @Column(name = "address", length = 60)
   @NotNull
+  @Size(max = 60)
   private String address;
 
-  @Column(name = "postal_code", length = 10)
+  @Column(name = "postal_code")
   @NotNull
+  @Size(max = 10)
   private String postalCode;
 
-  @Column(name = "city", length = 40)
   @NotNull
+  @Size(max = 40)
   private String city;
 
-  @Column(name = "country", columnDefinition = "char(3)")
   @NotNull
-  @Size(min = 2, max = 2)
+  @Size(max = 2)
   private String country;
 
   public int getId() {

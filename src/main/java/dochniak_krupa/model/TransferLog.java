@@ -11,27 +11,24 @@ import java.sql.Timestamp;
 public class TransferLog {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "sender_account_number")
   private int id;
 
-  @Column(name = "sender_account_number", columnDefinition = "char(26)")
-  @Size(min = 26, max = 26)
+  @Column(name = "sender_account_number")
+  @Size(max = 26)
   @NotNull
   private String senderAccountNumber;
 
-  @Column(name = "receiver_account_number", columnDefinition = "char(26)")
-  @Size(min = 26, max = 26)
+  @Column(name = "receiver_account_number")
+  @Size(max = 26)
   @NotNull
   private String receiverAccountNumber;
 
-  @Column(name = "currency_iso", columnDefinition = "char(3)")
-  @Size(min = 3, max = 3)
+  @Column(name = "currency_iso")
+  @Size(max = 3)
   @NotNull
   private String currencyIso;
 
-  @Column(name = "amount")
-  @NotNull
-  private BigInteger amount;
+  @NotNull private BigInteger amount;
 
   @Column(name = "transaction_time")
   @NotNull
