@@ -3,19 +3,19 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name = "hibernate.dialect">
+        <property name="hibernate.dialect">
             org.hibernate.dialect.MySQLDialect
         </property>
-        <property name = "hibernate.connection.driver_class">
+        <property name="hibernate.connection.driver_class">
             com.mysql.jdbc.Driver
         </property>
-        <property name = "hibernate.connection.url">
-            jdbc:mysql://localhost:3305/bank?autoReconnect=true&amp;useSSL=false
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost:3305/bank?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC&amp;autoReconnect=true&amp;useSSL=false
         </property>
-        <property name = "hibernate.connection.username">
+        <property name="hibernate.connection.username">
             root
         </property>
-        <property name = "hibernate.connection.password">
+        <property name="hibernate.connection.password">
             root123
         </property>
     </session-factory>

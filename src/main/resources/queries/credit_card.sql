@@ -6,7 +6,7 @@ create table credit_card
   card_verification char(3)        not null,
   expiry_date       date           not null,
   funds_limit       bigint         not null,
-  used_funds        bigint         not null default 0,
+  used_funds        bigint         not null,
   lending_rate      bigint         not null,
   constraint foreign key (account_number)
   references client (account_number)

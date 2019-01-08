@@ -9,12 +9,12 @@ create table employee
   phone_number     char(9) unique                      not null,
   email            varchar(60) unique,
   position         varchar(40)                         not null,
-  access           varchar(40)                         not null default 'common', /*common, manager, admin*/
+  access           varchar(40)                         not null, /*common, manager, admin*/
   salary           bigint                              not null,
   establishment_id int                                 not null, /*foreign key*/
   login            varchar(30) unique                  not null,
   password         varchar(30)                         not null,
-  is_working       bool                                not null default true,
-  log_time         datetime                            not null default now()
+  is_working       bool                                not null,
+  log_time         datetime                            not null
 );
 select * from employee;

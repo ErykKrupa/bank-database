@@ -10,14 +10,13 @@ import java.math.BigInteger;
 @Entity
 @Table(name = "account_currency")
 public class AccountCurrency {
-	@EmbeddedId
-	AccountCurrencyId accountCurrencyId;
+  @EmbeddedId AccountCurrencyId accountCurrencyId;
 
-	@Column(name = "balance")
-	@NotNull
-	private BigInteger balance;
+  @Column(name = "balance")
+  @NotNull
+  private BigInteger balance;
 
-	@Column(name = "lending_rate")
-	@NotNull
-	private BigInteger lendingRate;
+  @Column(name = "lending_rate")
+  @NotNull
+  private BigInteger lendingRate;
 }

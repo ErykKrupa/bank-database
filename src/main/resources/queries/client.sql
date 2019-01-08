@@ -3,7 +3,7 @@ create table client
 (
   account_number char(26) primary key,
   pesel          char(11) unique,
-  account_type   varchar(40)                   not null default 'standard',
+  account_type   varchar(40)                   not null,
   first_name     varchar(40)                   not null,
   last_name      varchar(40)                   not null,
   birth_date     date                          not null,
@@ -11,7 +11,7 @@ create table client
   email          varchar(60) unique,
   login          varchar(30) unique            not null,
   password       varchar(30)                   not null,
-  is_active      bool                          not null default true,
-  log_time       datetime                      not null default now()
+  is_active      bool                          not null,
+  log_time       datetime                      not null
 );
 select * from client;
