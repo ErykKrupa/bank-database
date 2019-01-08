@@ -1,5 +1,6 @@
 package dochniak_krupa.model;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,7 +12,11 @@ import java.math.BigInteger;
 public class AccountCurrency {
   @EmbeddedId AccountCurrencyId accountCurrencyId;
 
-  @NotNull private BigInteger balance;
+  @Column(name = "balance")
+  @NotNull
+  private BigInteger balance;
 
-  @NotNull private BigInteger lendingRate;
+  @Column(name = "lending_rate")
+  @NotNull
+  private BigInteger lendingRate;
 }

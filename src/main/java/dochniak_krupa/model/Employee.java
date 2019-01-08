@@ -1,7 +1,5 @@
 package dochniak_krupa.model;
 
-import dochniak_krupa.model.enum_type.AccountType;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,10 +12,10 @@ import java.sql.Timestamp;
 public class Employee {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private String id;
+  @Column(name = "id")
+  private int id;
 
-  @Column(columnDefinition = "char(11)")
-  @NotNull
+  @Column(name = "pesel", columnDefinition = "char(11)", unique = true)
   @Size(min = 11, max = 11)
   private String pesel;
 
@@ -33,34 +31,36 @@ public class Employee {
   @NotNull
   private Date birth_date;
 
-  @Column(name = "phone_number", columnDefinition = "char(9)")
+  @Column(name = "phone_number", columnDefinition = "char(9)", unique = true)
   @Size(min = 9, max = 9)
   private String phoneNumber;
 
-  @Column(length = 60)
+  @Column(name = "email", length = 60, unique = true)
   private String email;
 
-  @Column(length = 40)
+  @Column(name = "position", length = 40)
   @NotNull
   private String position;
 
+  @Column(name = "access")
   @Enumerated(EnumType.STRING)
   @NotNull
   private AccessType access;
 
-  @NotNull private BigInteger salary;
-
-  @Column(name = "employment_date")
+  @Column(name = "salary")
   @NotNull
-  private Date employmentDate;
+  private BigInteger salary;
 
-  @ManyToOne private Establishment establishment;
+  @Column(name = "establishment_id")
+  @NotNull
+  @ManyToOne
+  private Establishment establishment;
 
-  @Column(length = 30)
+  @Column(name = "login", length = 30, unique = true)
   @NotNull
   private String login;
 
-  @Column(length = 30)
+  @Column(name = "password", length = 30)
   @NotNull
   private String password;
 
@@ -71,4 +71,116 @@ public class Employee {
   @Column(name = "log_time")
   @NotNull
   private Timestamp logTime;
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public String getPesel() {
+    return pesel;
+  }
+
+  public void setPesel(String pesel) {
+    this.pesel = pesel;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public Date getBirth_date() {
+    return birth_date;
+  }
+
+  public void setBirth_date(Date birth_date) {
+    this.birth_date = birth_date;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPosition() {
+    return position;
+  }
+
+  public void setPosition(String position) {
+    this.position = position;
+  }
+
+  public AccessType getAccess() {
+    return access;
+  }
+
+  public void setAccess(AccessType access) {
+    this.access = access;
+  }
+
+  public BigInteger getSalary() {
+    return salary;
+  }
+
+  public void setSalary(BigInteger salary) {
+    this.salary = salary;
+  }
+
+  public String getLogin() {
+    return login;
+  }
+
+  public void setLogin(String login) {
+    this.login = login;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public boolean isWorking() {
+    return isWorking;
+  }
+
+  public void setWorking(boolean working) {
+    isWorking = working;
+  }
+
+  public Timestamp getLogTime() {
+    return logTime;
+  }
+
+  public void setLogTime(Timestamp logTime) {
+    this.logTime = logTime;
+  }
 }

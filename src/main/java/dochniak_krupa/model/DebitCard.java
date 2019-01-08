@@ -1,6 +1,7 @@
 package dochniak_krupa.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 
@@ -12,13 +13,18 @@ public class DebitCard {
   @Size(min = 16, max = 16)
   private String number;
 
-  @ManyToOne private Client client;
+  @Column(name = "account_number", unique = true)
+  @NotNull
+  @ManyToOne
+  private Client client;
 
   @Column(name = "card_verification", columnDefinition = "char(3)")
+  @NotNull
   @Size(min = 3, max = 3)
   private String cardVerification;
 
   @Column(name = "expiry_date")
+  @NotNull
   private Date expiryDate;
 
   public String getNumber() {
@@ -37,11 +43,11 @@ public class DebitCard {
     this.cardVerification = cardVerification;
   }
 
-  public Date getSqlDate() {
+  public Date getExpiryDate() {
     return expiryDate;
   }
 
-  public void setSqlDate(Date expiryDate) {
+  public void setExpiryDate(Date expiryDate) {
     this.expiryDate = expiryDate;
   }
 

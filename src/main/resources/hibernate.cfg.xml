@@ -3,22 +3,21 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-
-        <property name = "hibernate.dialect">
+        <property name="hibernate.dialect">
             org.hibernate.dialect.MySQLDialect
         </property>
 
         <!-- Assume test is the database name -->
 
-        <property name = "hibernate.connection.url">
+        <property name="hibernate.connection.url">
             jdbc:mysql://localhost:3306/bank?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC
         </property>
 
-        <property name = "hibernate.connection.username">
+        <property name="hibernate.connection.username">
             root
         </property>
 
-        <property name = "hibernate.connection.password">
+        <property name="hibernate.connection.password">
             root
         </property>
 
@@ -33,5 +32,6 @@
         <mapping class="dochniak_krupa.model.Employee"/>
         <mapping class="dochniak_krupa.model.Establishment"/>
         <mapping class="dochniak_krupa.model.TransferLog"/>
+
     </session-factory>
 </hibernate-configuration>

@@ -13,12 +13,10 @@ import java.sql.Timestamp;
 public class Client {
   @Id
   @Column(name = "account_number", columnDefinition = "char(26)")
-  @NotNull
   @Size(max = 26, min = 26)
   private String accountNumber;
 
-  @Column(columnDefinition = "char(11)")
-  @NotNull
+  @Column(name = "pesel", columnDefinition = "char(11)", unique = true)
   @Size(min = 11, max = 11)
   private String pesel;
 
@@ -39,14 +37,15 @@ public class Client {
   @NotNull
   private Date birth_date;
 
-  @Column(name = "phone_number", columnDefinition = "char(9)")
+  @Column(name = "phone_number", columnDefinition = "char(9)", unique = true)
+  @NotNull
   @Size(min = 9, max = 9)
   private String phoneNumber;
 
-  @Column(length = 60)
+  @Column(length = 60, unique = true)
   private String email;
 
-  @Column(length = 30)
+  @Column(length = 30, unique = true)
   @NotNull
   private String login;
 
