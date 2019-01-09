@@ -29,6 +29,7 @@ public class Employee {
   @Size(max = 11)
   private String lastName;
 
+  @Column(name = "birth_date")
   @NotNull private Date birthDate;
 
   @Column(name = "phone_number", unique = true)
