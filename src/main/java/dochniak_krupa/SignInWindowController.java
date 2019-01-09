@@ -1,5 +1,6 @@
 package dochniak_krupa;
 
+import dochniak_krupa.model.Client;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -8,12 +9,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SignInWindowController implements Initializable {
 
+  public static SessionFactory sessionFactory;
   @FXML private TextField loginTxtField;
   @FXML private TextField passwordTxtField;
   @FXML private ChoiceBox<String> typeOfAccountChoiceBox;
@@ -26,9 +31,14 @@ public class SignInWindowController implements Initializable {
       Stage stage = new Stage();
       stage.setTitle("Banking app");
       stage.setScene(new Scene(p));
+      sessionFactory =
+          new Configuration().configure().addAnnotatedClass(Client.class).buildSessionFactory();
       stage.show();
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } catch (Throwable ex) {
+      System.err.println("Failed to create sessionFactory object" + ex);
+      throw new ExceptionInInitializerError(ex);
     }
   }
 
