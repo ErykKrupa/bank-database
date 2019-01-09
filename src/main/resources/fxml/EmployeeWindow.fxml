@@ -67,25 +67,25 @@
                                                 GridPane.rowIndex="9" GridPane.valignment="CENTER"
                                                 onMouseClicked="#createClientAccount"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="0"
-                                                   fx:id="addClientPeselTextField"/>
+                                                   fx:id="addClientPesel"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"
-                                                   fx:id="addClientAccountTypeTextField"
+                                                   fx:id="addClientAccountType"
                                                    text="we can add drop down list here"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"
-                                                   fx:id="addClientFirstNameTextField"/>
+                                                   fx:id="addClientFirstName"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="3"
-                                                   fx:id="addClientLastNameTextField"/>
+                                                   fx:id="addClientLastName"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="4"
-                                                   fx:id="addClientBirthDateTextField"
+                                                   fx:id="addClientBirthDate"
                                                    text="we can add here a drop down list to choose a date"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="5"
-                                                   fx:id="addClientPhoneNumberTextField"/>
+                                                   fx:id="addClientPhoneNumber"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="6"
-                                                   fx:id="addClientEmailTextField"/>
+                                                   fx:id="addClientEmail"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="7"
-                                                   fx:id="addClientLoginTextField"/>
+                                                   fx:id="addClientLogin"/>
                                         <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="8"
-                                                       fx:id="addClientPasswordField"/>
+                                                       fx:id="addClientPassword"/>
                                     </children>
                                 </GridPane>
                             </content>
@@ -99,9 +99,9 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
                         <TextField layoutX="166.0" layoutY="36.0" prefHeight="35.0" prefWidth="234.0"
-                                   promptText="Account Number"/>
+                                   promptText="Account Number" fx:id="deleteClientAccountNumber"/>
                         <Button layoutX="198.0" layoutY="93.0" mnemonicParsing="false"
-                                text="Remove client from database"/>
+                                text="Remove customer account" onMouseClicked="#deleteClientAccount"/>
                     </children>
                 </AnchorPane>
             </content>
@@ -156,29 +156,27 @@
                                         <Label text="Password:" GridPane.rowIndex="9"/>
 
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="0"
-                                                   fx:id="updateClientAccountNumberTextField"/>
+                                                   fx:id="updateClientAccountNumber"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"
-                                                   fx:id="updateClientPeselTextField"/>
+                                                   fx:id="updateClientPesel"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"
-                                                   fx:id="updateClientAccountTypeTextField"
+                                                   fx:id="updateClientAccountType"
                                                    text="we can add drop down list here"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="3"
-                                                   fx:id="updateClientFirstNameTextField"/>
+                                                   fx:id="updateClientFirstName"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="4"
-                                                   fx:id="updateClientLastNameTextField"/>
+                                                   fx:id="updateClientLastName"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="5"
-                                                   fx:id="updateClientBirthDateTextField"
+                                                   fx:id="updateClientBirthDate"
                                                    text="we can add here a drop down list to choose a date"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="6"
-                                                   fx:id="updateClientPhoneNumberTextField"/>
+                                                   fx:id="updateClientPhoneNumber"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="7"
-                                                   fx:id="updateClientEmailTextField"/>
+                                                   fx:id="updateClientEmail"/>
                                         <TextField GridPane.columnIndex="1" GridPane.rowIndex="8"
-                                                   fx:id="updateClientLoginTextField"/>
+                                                   fx:id="updateClientLogin"/>
                                         <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="9"
-                                                       fx:id="updateClientPasswordField"/>
-
-
+                                                       fx:id="updateClientPassword"/>
                                     </children>
                                 </GridPane>
                             </content>

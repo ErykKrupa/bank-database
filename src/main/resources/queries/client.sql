@@ -1,7 +1,7 @@
 drop table if exists client;
 create table client
 (
-  account_number char(26)                     not null,
+  account_number char(26) primary key,
   pesel          char(11) unique,
   account_type   varchar(40)                   not null,
   first_name     varchar(40)                   not null,

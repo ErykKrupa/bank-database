@@ -83,15 +83,19 @@ public class Client {
   }
 
   public void setPesel(String pesel) {
-    if (pesel.length() != 11) {
-      throw new IllegalArgumentException();
+    if (pesel.length() == 0) {
+      this.pesel = null;
+    } else {
+      if (pesel.length() != 11) {
+        throw new IllegalArgumentException();
+      }
+      try {
+        new BigInteger(pesel);
+      } catch (NumberFormatException nfe) {
+        throw new IllegalArgumentException();
+      }
+      this.pesel = pesel;
     }
-    try {
-      new BigInteger(pesel);
-    } catch (NumberFormatException nfe) {
-      throw new IllegalArgumentException();
-    }
-    this.pesel = pesel;
   }
 
   public AccountType getAccountType() {
