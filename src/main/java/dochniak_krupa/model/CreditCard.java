@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigInteger;
 import java.sql.Date;
+import java.util.Calendar;
 
 @Entity
 @Table(name = "credit_card")
@@ -26,7 +27,11 @@ public class CreditCard {
 
   @Column(name = "expiry_date")
   @NotNull
-  private Date expiryDate;
+  private Date expiryDate =
+      new Date(
+          Calendar.getInstance().get(Calendar.YEAR) + 2,
+          Calendar.getInstance().get(Calendar.MONTH) + 6,
+          Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
   @Column(name = "funds_limit")
   @NotNull
@@ -34,17 +39,26 @@ public class CreditCard {
 
   @Column(name = "used_funds")
   @NotNull
-  private BigInteger usedFunds;
+  private BigInteger usedFunds = new BigInteger("0");
 
-  @Column(name = "lending_rate")
+  @Column(name = "currency", columnDefinition = "char(3)")
   @NotNull
-  private BigInteger lendingRate;
+  @Size(min = 3, max = 3)
+  private String currency;
 
   public String getNumber() {
     return number;
   }
 
   public void setNumber(String number) {
+    if (number.length() != 16) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      new BigInteger(number);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.number = number;
   }
 
@@ -53,6 +67,14 @@ public class CreditCard {
   }
 
   public void setCardVerification(String cardVerification) {
+    if (cardVerification.length() != 3) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      Integer.parseInt(cardVerification);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.cardVerification = cardVerification;
   }
 
@@ -69,7 +91,11 @@ public class CreditCard {
   }
 
   public void setLimit(BigInteger limit) {
-    this.limit = limit;
+    if (limit.compareTo(new BigInteger("0")) > 0) {
+      this.limit = limit;
+    } else {
+      throw new IllegalArgumentException();
+    }
   }
 
   public BigInteger getUsedFunds() {
@@ -80,11 +106,11 @@ public class CreditCard {
     this.usedFunds = usedFunds;
   }
 
-  public BigInteger getLendingRate() {
-    return lendingRate;
+  public String getCurrency() {
+    return currency;
   }
 
-  public void setLendingRate(BigInteger lendingRate) {
-    this.lendingRate = lendingRate;
+  public void setCurrency(String currency) {
+    this.currency = currency;
   }
 }

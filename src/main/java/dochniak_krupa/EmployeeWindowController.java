@@ -5,6 +5,7 @@ import dochniak_krupa.model.enum_type.AccountType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import org.hibernate.*;
 
@@ -37,6 +38,9 @@ public class EmployeeWindowController {
   @FXML TextField updateClientEmail = new TextField();
   @FXML TextField updateClientLogin = new TextField();
   @FXML PasswordField updateClientPassword = new PasswordField();
+
+  @FXML RadioButton creditCardRadioButton = new RadioButton();
+  @FXML RadioButton debitCardRadioButton = new RadioButton();
 
   @FXML
   void createClientAccount() {
@@ -116,6 +120,14 @@ public class EmployeeWindowController {
       isExecuted = false;
     }
     showAlert(isExecuted);
+  }
+
+  @FXML void createCard() {
+
+  }
+
+  @FXML void deleteCard() {
+
   }
 
   private static String generateAccountNumber() {

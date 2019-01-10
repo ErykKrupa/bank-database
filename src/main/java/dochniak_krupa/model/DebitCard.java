@@ -3,7 +3,9 @@ package dochniak_krupa.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigInteger;
 import java.sql.Date;
+import java.util.Calendar;
 
 @Entity
 @Table(name = "debit_card")
@@ -25,13 +27,25 @@ public class DebitCard {
 
   @Column(name = "expiry_date")
   @NotNull
-  private Date expiryDate;
+  private Date expiryDate =
+      new Date(
+          Calendar.getInstance().get(Calendar.YEAR) + 2,
+          Calendar.getInstance().get(Calendar.MONTH) + 6,
+          Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
   public String getNumber() {
     return number;
   }
 
   public void setNumber(String number) {
+    if (number.length() != 16) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      new BigInteger(number);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.number = number;
   }
 
@@ -40,6 +54,14 @@ public class DebitCard {
   }
 
   public void setCardVerification(String cardVerification) {
+    if (cardVerification.length() != 3) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      Integer.parseInt(cardVerification);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.cardVerification = cardVerification;
   }
 
