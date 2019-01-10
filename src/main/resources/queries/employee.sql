@@ -11,11 +11,9 @@ create table employee
   position         varchar(40)                         not null,
   access           varchar(40)                         not null default 'common', /*common, manager, admin*/
   salary           bigint                              not null,
-  establishment_id int                                 not null, /*foreign key*/
   login            varchar(30) unique                  not null,
   password         varchar(30)                         not null,
   is_working       bool                                not null default true,
-  log_time         datetime                            not null default now(),
-  FOREIGN KEY (establishment_id) REFERENCES establishment(id)
+  log_time         datetime                            not null default now()
 );
 select * from employee;

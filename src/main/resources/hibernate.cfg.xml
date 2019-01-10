@@ -30,7 +30,6 @@
         <mapping class="dochniak_krupa.model.Currency"/>
         <mapping class="dochniak_krupa.model.DebitCard"/>
         <mapping class="dochniak_krupa.model.Employee"/>
-        <mapping class="dochniak_krupa.model.Establishment"/>
         <mapping class="dochniak_krupa.model.TransferLog"/>
 
     </session-factory>

@@ -51,8 +51,6 @@ public class Employee {
 
   @NotNull private BigInteger salary;
 
-  @NotNull @ManyToOne private Establishment establishment;
-
   @Column(unique = true)
   @NotNull
   @Size(max = 30)
@@ -148,14 +146,6 @@ public class Employee {
 
   public void setSalary(BigInteger salary) {
     this.salary = salary;
-  }
-
-  public Establishment getEstablishment() {
-    return establishment;
-  }
-
-  public void setEstablishment(Establishment establishment) {
-    this.establishment = establishment;
   }
 
   public String getLogin() {
