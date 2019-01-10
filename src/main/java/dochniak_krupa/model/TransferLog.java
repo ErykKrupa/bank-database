@@ -3,6 +3,7 @@ package dochniak_krupa.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
@@ -32,7 +33,7 @@ public class TransferLog {
 
   @Column(name = "transaction_time")
   @NotNull
-  private Timestamp transactionTime;
+  private Timestamp transactionTime = (new Timestamp(System.currentTimeMillis()+3600000));
 
   public int getId() {
     return id;

@@ -33,6 +33,10 @@ public class AccountCurrency implements Serializable {
     this.currency = currency;
   }
 
+  public Currency getCurrency() {
+    return currency;
+  }
+
   public BigInteger getBalance() {
     return balance;
   }

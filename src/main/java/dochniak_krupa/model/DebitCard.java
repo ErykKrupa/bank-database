@@ -12,7 +12,10 @@ public class DebitCard {
   @Size(max = 16)
   private String number;
 
-  @NotNull @ManyToOne private Client client;
+  @NotNull
+  @ManyToOne
+  @JoinColumn(name = "account_number")
+  private Client client;
 
   @Column(name = "card_verification")
   @NotNull

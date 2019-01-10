@@ -3,6 +3,7 @@ package dochniak_krupa.controller;
 import dochniak_krupa.database.HibernateUtility;
 import dochniak_krupa.model.Client;
 import dochniak_krupa.model.Employee;
+import dochniak_krupa.session.SessionPreferences;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,6 +22,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 public class SignInWindowController implements Initializable {
 
@@ -67,7 +69,7 @@ public class SignInWindowController implements Initializable {
       // if user is an employee we must check his access type
       // in order to display proper window
       if (!users.iterator().hasNext()) throw new IllegalArgumentException();
-      else if (user.equals("Employee")) {
+      if (user.equals("Employee")) {
         switch (((Employee) users.get(0)).getAccess().toString()) {
           case "common":
             return "Employee";
@@ -76,6 +78,8 @@ public class SignInWindowController implements Initializable {
           case "admin":
             return "Admin";
         }
+      }else{
+        SessionPreferences.pref.put("account_number",((Client) users.get(0)).getAccountNumber());
       }
     } catch (HibernateException e) {
       e.printStackTrace();

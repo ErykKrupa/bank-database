@@ -13,7 +13,10 @@ public class CreditCard {
   @Size(max = 16)
   private String number;
 
-  @NotNull @ManyToOne Client client;
+  @NotNull
+  @ManyToOne
+  @JoinColumn(name = "account_number")
+  Client client;
 
   @Column(name = "card_verification")
   @NotNull
