@@ -26,7 +26,6 @@ public class FillDatabase {
     // fillClients(10000);
     // fillTransactions(10000);
     // fillEmployees(10000);
-
   }
 
   private static void fillClients(int number) {
@@ -104,7 +103,7 @@ public class FillDatabase {
       Transaction tx;
       Query q = session.createQuery("SELECT COUNT(c) FROM Client c");
       List count = q.list();
-      int in = (int) (long) count.get(0);
+      int numberOfClients = (int) (long) count.get(0);
 
       Query query = session.createQuery("SELECT accountNumber FROM Client");
       List list = query.list();
@@ -112,8 +111,8 @@ public class FillDatabase {
       for (int i = 0; i < number; i++) {
         tx = session.beginTransaction();
         TransferLog t = new TransferLog();
-        t.setSenderAccountNumber((String) list.get(random.nextInt(in)));
-        t.setReceiverAccountNumber((String) list.get(random.nextInt(in)));
+        t.setSenderAccountNumber((String) list.get(random.nextInt(numberOfClients)));
+        t.setReceiverAccountNumber((String) list.get(random.nextInt(numberOfClients)));
         t.setCurrencyIso("PLN");
         t.setAmount(new BigInteger(String.valueOf(random.nextInt(500) * 10)));
         t.setTransactionTime(new Timestamp(faker.date().birthday(0, 25).getTime()));
@@ -173,28 +172,28 @@ public class FillDatabase {
     switch (position) {
       case "Office worker":
         {
-          int value = random.nextInt(30) * 100 + 2300;
-          return new BigInteger(String.valueOf(value));
+          int salary = random.nextInt(30) * 100 + 2300;
+          return new BigInteger(String.valueOf(salary));
         }
       case "Customer advisor":
         {
-          int value = random.nextInt(15) * 100 + 2300;
-          return new BigInteger(String.valueOf(value));
+          int salary = random.nextInt(15) * 100 + 2300;
+          return new BigInteger(String.valueOf(salary));
         }
       case "Manager":
         {
-          int value = random.nextInt(50) * 100 + 4000;
-          return new BigInteger(String.valueOf(value));
+          int salary = random.nextInt(50) * 100 + 4000;
+          return new BigInteger(String.valueOf(salary));
         }
       case "Director":
         {
-          int value = random.nextInt(100) * 100 + 10000;
-          return new BigInteger(String.valueOf(value));
+          int salary = random.nextInt(100) * 100 + 10000;
+          return new BigInteger(String.valueOf(salary));
         }
       default:
         {
-          int value = random.nextInt(10) * 10 + 2300;
-          return new BigInteger(String.valueOf(value));
+          int salary = random.nextInt(10) * 10 + 2300;
+          return new BigInteger(String.valueOf(salary));
         }
     }
   }
