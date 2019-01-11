@@ -12,7 +12,7 @@ public class CreditCard {
   @Id
   @Size(max = 16)
   private String number;
-
+  
   @NotNull
   @ManyToOne
   @JoinColumn(name = "account_number")

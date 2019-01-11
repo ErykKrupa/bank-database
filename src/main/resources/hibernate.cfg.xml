@@ -7,18 +7,17 @@
             org.hibernate.dialect.MySQLDialect
         </property>
 
-        <!-- Assume test is the database name -->
-
-        <property name="hibernate.connection.url">
-            jdbc:mysql://localhost:3306/bank?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC
+        <property name="hibernate.connection.driver_class">
+            com.mysql.jdbc.Driver
         </property>
-
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost:3305/bank?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC&amp;autoReconnect=true&amp;useSSL=false
+        </property>
         <property name="hibernate.connection.username">
             root
         </property>
-
         <property name="hibernate.connection.password">
-            root
+            root123
         </property>
 
         <property name="hibernate.id.new_generator_mappings">false</property>

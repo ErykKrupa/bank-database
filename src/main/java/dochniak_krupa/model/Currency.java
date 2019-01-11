@@ -35,7 +35,6 @@ public class Currency {
   }
 
   public void setCurrencyName(String name) {
-
     this.currencyName = name;
   }
 
