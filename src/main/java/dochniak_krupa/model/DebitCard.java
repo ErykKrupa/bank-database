@@ -27,11 +27,7 @@ public class DebitCard {
 
   @Column(name = "expiry_date")
   @NotNull
-  private Date expiryDate =
-      new Date(
-          Calendar.getInstance().get(Calendar.YEAR) + 2,
-          Calendar.getInstance().get(Calendar.MONTH) + 6,
-          Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+  private Date expiryDate;
 
   public String getNumber() {
     return number;
@@ -47,6 +43,14 @@ public class DebitCard {
       throw new IllegalArgumentException();
     }
     this.number = number;
+  }
+
+  public Client getClient() {
+    return client;
+  }
+
+  public void setClient(Client client) {
+    this.client = client;
   }
 
   public String getCardVerification() {
@@ -70,14 +74,10 @@ public class DebitCard {
   }
 
   public void setExpiryDate(Date expiryDate) {
-    this.expiryDate = expiryDate;
-  }
-
-  public Client getClient() {
-    return client;
-  }
-
-  public void setClient(Client client) {
-    this.client = client;
+    if (expiryDate.compareTo(new Date(System.currentTimeMillis() + 3600)) > 0) {
+      this.expiryDate = expiryDate;
+    } else {
+      throw new IllegalArgumentException();
+    }
   }
 }

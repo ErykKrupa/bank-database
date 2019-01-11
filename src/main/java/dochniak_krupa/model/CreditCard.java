@@ -5,7 +5,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigInteger;
 import java.sql.Date;
-import java.util.Calendar;
 
 @Entity
 @Table(name = "credit_card")
@@ -18,7 +17,7 @@ public class CreditCard {
   @Column(name = "account_number")
   @NotNull
   @ManyToOne
-  Client client;
+  private Client client;
 
   @Column(name = "card_verification", columnDefinition = "char(3)")
   @NotNull
@@ -27,15 +26,11 @@ public class CreditCard {
 
   @Column(name = "expiry_date")
   @NotNull
-  private Date expiryDate =
-      new Date(
-          Calendar.getInstance().get(Calendar.YEAR) + 2,
-          Calendar.getInstance().get(Calendar.MONTH) + 6,
-          Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+  private Date expiryDate;
 
   @Column(name = "funds_limit")
   @NotNull
-  private BigInteger limit;
+  private BigInteger fundsLimit;
 
   @Column(name = "used_funds")
   @NotNull
@@ -43,8 +38,9 @@ public class CreditCard {
 
   @Column(name = "currency", columnDefinition = "char(3)")
   @NotNull
+  @ManyToOne
   @Size(min = 3, max = 3)
-  private String currency;
+  private Currency currency;
 
   public String getNumber() {
     return number;
@@ -60,6 +56,14 @@ public class CreditCard {
       throw new IllegalArgumentException();
     }
     this.number = number;
+  }
+
+  public Client getClient() {
+    return client;
+  }
+
+  public void setClient(Client client) {
+    this.client = client;
   }
 
   public String getCardVerification() {
@@ -83,16 +87,20 @@ public class CreditCard {
   }
 
   public void setExpiryDate(Date expiryDate) {
-    this.expiryDate = expiryDate;
+    if (expiryDate.compareTo(new Date(System.currentTimeMillis() + 3600)) > 0) {
+      this.expiryDate = expiryDate;
+    } else {
+      throw new IllegalArgumentException();
+    }
   }
 
-  public BigInteger getLimit() {
-    return limit;
+  public BigInteger getFundsLimit() {
+    return fundsLimit;
   }
 
-  public void setLimit(BigInteger limit) {
-    if (limit.compareTo(new BigInteger("0")) > 0) {
-      this.limit = limit;
+  public void setFundsLimit(BigInteger fundsLimit) {
+    if (fundsLimit.compareTo(new BigInteger("0")) > 0) {
+      this.fundsLimit = fundsLimit;
     } else {
       throw new IllegalArgumentException();
     }
@@ -106,11 +114,11 @@ public class CreditCard {
     this.usedFunds = usedFunds;
   }
 
-  public String getCurrency() {
+  public Currency getCurrency() {
     return currency;
   }
 
-  public void setCurrency(String currency) {
+  public void setCurrency(Currency currency) {
     this.currency = currency;
   }
 }

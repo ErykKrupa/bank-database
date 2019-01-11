@@ -8,9 +8,9 @@ create table credit_card
   funds_limit       bigint         not null,
   used_funds        bigint         not null,
   currency          char(3)        not null,
-  constraint foreign key (currency)
-  references currency (currency_name),
   constraint foreign key (account_number)
-  references client (account_number)
+  references client (account_number),
+  constraint foreign key (currency)
+  references currency (iso)
 );
 select * from credit_card;
