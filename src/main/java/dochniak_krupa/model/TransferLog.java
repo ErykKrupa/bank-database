@@ -32,7 +32,7 @@ public class TransferLog {
 
   @Column(name = "transaction_time")
   @NotNull
-  private Timestamp transactionTime = (new Timestamp(System.currentTimeMillis()+3600000));
+  private Timestamp transactionTime = (new Timestamp(System.currentTimeMillis() + 3600000));
 
   public int getId() {
     return id;

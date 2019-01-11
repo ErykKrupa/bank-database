@@ -15,14 +15,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 public class SignInWindowController implements Initializable {
 
@@ -57,7 +54,7 @@ public class SignInWindowController implements Initializable {
     typeOfAccountChoiceBox.getItems().addAll("Client", "Employee");
   }
 
-  //checks if credentials exist in DB and returns value of window to display
+  // checks if credentials exist in DB and returns value of window to display
   private String validateSignIn(String user) throws IllegalArgumentException {
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
       String query = "FROM " + user + " WHERE login=:login AND password=:password";
@@ -78,8 +75,8 @@ public class SignInWindowController implements Initializable {
           case "admin":
             return "Admin";
         }
-      }else{
-        SessionPreferences.pref.put("account_number",((Client) users.get(0)).getAccountNumber());
+      } else {
+        SessionPreferences.pref.put("account_number", ((Client) users.get(0)).getAccountNumber());
       }
     } catch (HibernateException e) {
       e.printStackTrace();

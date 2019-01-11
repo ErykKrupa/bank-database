@@ -30,7 +30,8 @@ public class Employee {
   private String lastName;
 
   @Column(name = "birth_date")
-  @NotNull private Date birthDate;
+  @NotNull
+  private Date birthDate;
 
   @Column(name = "phone_number", unique = true)
   @NotNull

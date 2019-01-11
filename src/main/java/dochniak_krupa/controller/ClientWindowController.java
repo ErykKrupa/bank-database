@@ -6,22 +6,12 @@ import dochniak_krupa.session.SessionPreferences;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.hibernate.query.Query;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.URL;
-import java.nio.Buffer;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -30,14 +20,13 @@ public class ClientWindowController implements Initializable {
   @FXML private Label currencyLabel;
   @FXML private TextField receiverAccountTxtField;
   @FXML private TextField amountOfMoneyTxtField;
-  @FXML private Button commitTransferBtn;
   @FXML private ChoiceBox<String> currencyChoiceBox;
   @FXML private TextArea listOfCardsTxtArea;
 
   @FXML
   private void onAccountBalanceTabClick() {
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-      String query = "FROM AccountCurrency  WHERE account_number=:accNum";
+      String query = "FROM AccountCurrency WHERE account_number=:accNum";
       Query sqlQuery = session.createQuery(query);
       sqlQuery.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
       List accountInfo = sqlQuery.list();
@@ -78,10 +67,7 @@ public class ClientWindowController implements Initializable {
       senderAC.setBalance(senderAC.getBalance().subtract(tlog.getAmount()));
       session.update(senderAC);
 
-      if (senderAC.getBalance()
-              .subtract(tlog.getAmount())
-              .compareTo(new BigInteger("0"))
-          < 0) {
+      if (senderAC.getBalance().subtract(tlog.getAmount()).compareTo(new BigInteger("0")) < 0) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Not enough funds!");
         alert.setHeaderText("You don't have enough funds!");
@@ -106,36 +92,42 @@ public class ClientWindowController implements Initializable {
     }
   }
 
-  private void listAllCardsIntoTxtArea(){
+  private void listAllCardsIntoTxtArea() {
     listOfCardsTxtArea.clear();
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
       String query = "FROM CreditCard WHERE account_number=:accNum";
       Query sqlQuery = session.createQuery(query);
       sqlQuery.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
       List cards = sqlQuery.list();
-      if(cards.iterator().hasNext()) listOfCardsTxtArea.appendText("Credit Cards:" + "\n");
+      if (cards.iterator().hasNext()) listOfCardsTxtArea.appendText("Credit Cards:" + "\n");
       for (Object c : cards) {
-        listOfCardsTxtArea.appendText("------------------------------------------------------" + "\n");
+        listOfCardsTxtArea.appendText(
+            "------------------------------------------------------" + "\n");
         listOfCardsTxtArea.appendText(("Number: " + ((CreditCard) c).getNumber() + "\n"));
-        listOfCardsTxtArea.appendText(("Verification number: " + ((CreditCard) c).getCardVerification() + "\n"));
-        listOfCardsTxtArea.appendText("Expiry date: "+ ((CreditCard) c).getExpiryDate() + "\n");
+        listOfCardsTxtArea.appendText(
+            ("Verification number: " + ((CreditCard) c).getCardVerification() + "\n"));
+        listOfCardsTxtArea.appendText("Expiry date: " + ((CreditCard) c).getExpiryDate() + "\n");
         listOfCardsTxtArea.appendText("Limit: " + ((CreditCard) c).getLimit() + "\n");
-        listOfCardsTxtArea.appendText( "Used funds: " + ((CreditCard) c).getUsedFunds() + "\n");
+        listOfCardsTxtArea.appendText("Used funds: " + ((CreditCard) c).getUsedFunds() + "\n");
         listOfCardsTxtArea.appendText("Lending rate: " + ((CreditCard) c).getLendingRate() + "\n");
-        listOfCardsTxtArea.appendText("------------------------------------------------------" + "\n");
+        listOfCardsTxtArea.appendText(
+            "------------------------------------------------------" + "\n");
       }
 
       String query2 = "FROM DebitCard WHERE account_number=:accNum";
       Query sqlQuery2 = session.createQuery(query2);
       sqlQuery2.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
       List debitCards = sqlQuery2.list();
-      if(debitCards.iterator().hasNext()) listOfCardsTxtArea.appendText("Debit Cards:" + "\n");
+      if (debitCards.iterator().hasNext()) listOfCardsTxtArea.appendText("Debit Cards:" + "\n");
       for (Object c : debitCards) {
-        listOfCardsTxtArea.appendText("------------------------------------------------------" + "\n");
+        listOfCardsTxtArea.appendText(
+            "------------------------------------------------------" + "\n");
         listOfCardsTxtArea.appendText(("Number: " + ((DebitCard) c).getNumber() + "\n"));
-        listOfCardsTxtArea.appendText(("Verification number: " + ((DebitCard) c).getCardVerification() + "\n"));
-        listOfCardsTxtArea.appendText("Expiry date: "+ ((DebitCard) c).getExpiryDate() + "\n");
-        listOfCardsTxtArea.appendText("------------------------------------------------------" + "\n");
+        listOfCardsTxtArea.appendText(
+            ("Verification number: " + ((DebitCard) c).getCardVerification() + "\n"));
+        listOfCardsTxtArea.appendText("Expiry date: " + ((DebitCard) c).getExpiryDate() + "\n");
+        listOfCardsTxtArea.appendText(
+            "------------------------------------------------------" + "\n");
       }
     } catch (HibernateException e) {
       e.printStackTrace();
@@ -150,9 +142,8 @@ public class ClientWindowController implements Initializable {
 
   private void loadChoiceBoxData() {
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-      List currencies = session.createQuery("FROM Currency").list();
-      for (Object c : currencies)
-        currencyChoiceBox.getItems().add(((Currency) c).getIso());
+      List currencies = session.createQuery("SELECT iso FROM Currency").list();
+      for (Object c : currencies) currencyChoiceBox.getItems().add(((String) c));
     } catch (HibernateException e) {
       e.printStackTrace();
     }
