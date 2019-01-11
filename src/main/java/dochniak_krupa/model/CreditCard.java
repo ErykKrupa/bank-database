@@ -16,7 +16,7 @@ public class CreditCard {
   @NotNull
   @ManyToOne
   @JoinColumn(name = "account_number")
-  Client client;
+  private Client client;
 
   @Column(name = "card_verification")
   @NotNull
@@ -29,22 +29,34 @@ public class CreditCard {
 
   @Column(name = "funds_limit")
   @NotNull
-  private BigInteger limit;
+  private BigInteger fundsLimit;
 
   @Column(name = "used_funds")
   @NotNull
   private BigInteger usedFunds;
-
-  @Column(name = "lending_rate")
-  @NotNull
-  private BigInteger lendingRate;
 
   public String getNumber() {
     return number;
   }
 
   public void setNumber(String number) {
+    if (number.length() != 16) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      new BigInteger(number);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.number = number;
+  }
+
+  public Client getClient() {
+    return client;
+  }
+
+  public void setClient(Client client) {
+    this.client = client;
   }
 
   public String getCardVerification() {
@@ -52,6 +64,14 @@ public class CreditCard {
   }
 
   public void setCardVerification(String cardVerification) {
+    if (cardVerification.length() != 3) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      Integer.parseInt(cardVerification);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.cardVerification = cardVerification;
   }
 
@@ -60,15 +80,23 @@ public class CreditCard {
   }
 
   public void setExpiryDate(Date expiryDate) {
-    this.expiryDate = expiryDate;
+    if (expiryDate.compareTo(new Date(System.currentTimeMillis() + 3600)) > 0) {
+      this.expiryDate = expiryDate;
+    } else {
+      throw new IllegalArgumentException();
+    }
   }
 
-  public BigInteger getLimit() {
-    return limit;
+  public BigInteger getFundsLimit() {
+    return fundsLimit;
   }
 
-  public void setLimit(BigInteger limit) {
-    this.limit = limit;
+  public void setFundsLimit(BigInteger fundsLimit) {
+    if (fundsLimit.compareTo(new BigInteger("0")) > 0) {
+      this.fundsLimit = fundsLimit;
+    } else {
+      throw new IllegalArgumentException();
+    }
   }
 
   public BigInteger getUsedFunds() {
@@ -77,13 +105,5 @@ public class CreditCard {
 
   public void setUsedFunds(BigInteger usedFunds) {
     this.usedFunds = usedFunds;
-  }
-
-  public BigInteger getLendingRate() {
-    return lendingRate;
-  }
-
-  public void setLendingRate(BigInteger lendingRate) {
-    this.lendingRate = lendingRate;
   }
 }

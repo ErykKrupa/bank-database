@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -23,7 +24,7 @@ public class FillDatabase {
   private static Faker faker = new Faker();
 
   public static void main(String[] args) {
-    // fillClients(10000);
+    fillClients(1);
     // fillTransactions(10000);
     // fillEmployees(10000);
   }
@@ -53,7 +54,8 @@ public class FillDatabase {
         c.setActive(generateIsActiveValue());
         c.setLogTime(new Timestamp(faker.date().birthday(0, 25).getTime()));
 
-        session.save(c);
+        Serializable s = session.save(c);
+        System.out.println(s);
 
         tx.commit();
       } catch (HibernateException e) {

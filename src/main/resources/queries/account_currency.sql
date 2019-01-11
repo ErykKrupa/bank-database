@@ -3,7 +3,7 @@ create table account_currency
 (
   account_number char(26) not null,
   currency_iso   char(3)  not null,
-  balance        bigint   not null default 0,
+  balance        bigint   not null,
   lending_rate   bigint   not null,
   constraint primary key (account_number, currency_iso),
   foreign key (account_number)
@@ -12,3 +12,5 @@ create table account_currency
   references currency (iso)
 );
 select * from account_currency;
+
+insert into account_currency values ("")

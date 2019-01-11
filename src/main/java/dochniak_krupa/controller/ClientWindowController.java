@@ -107,9 +107,8 @@ public class ClientWindowController implements Initializable {
         listOfCardsTxtArea.appendText(
             ("Verification number: " + ((CreditCard) c).getCardVerification() + "\n"));
         listOfCardsTxtArea.appendText("Expiry date: " + ((CreditCard) c).getExpiryDate() + "\n");
-        listOfCardsTxtArea.appendText("Limit: " + ((CreditCard) c).getLimit() + "\n");
+        listOfCardsTxtArea.appendText("Limit: " + ((CreditCard) c).getFundsLimit() + "\n");
         listOfCardsTxtArea.appendText("Used funds: " + ((CreditCard) c).getUsedFunds() + "\n");
-        listOfCardsTxtArea.appendText("Lending rate: " + ((CreditCard) c).getLendingRate() + "\n");
         listOfCardsTxtArea.appendText(
             "------------------------------------------------------" + "\n");
       }

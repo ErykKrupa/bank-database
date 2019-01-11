@@ -5,6 +5,7 @@ import dochniak_krupa.model.enum_type.AccountType;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -58,17 +59,25 @@ public class Client {
 
   @Column(name = "is_active")
   @NotNull
-  private boolean isActive;
+  private boolean isActive = true;
 
   @Column(name = "log_time")
   @NotNull
-  private Timestamp logTime;
+  private Timestamp logTime = new Timestamp(System.currentTimeMillis() + 3600000);
 
   public String getAccountNumber() {
     return accountNumber;
   }
 
   public void setAccountNumber(String accountNumber) {
+    if (accountNumber.length() != 26) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      new BigInteger(accountNumber);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.accountNumber = accountNumber;
   }
 
@@ -77,7 +86,19 @@ public class Client {
   }
 
   public void setPesel(String pesel) {
-    this.pesel = pesel;
+    if (pesel.length() == 0) {
+      this.pesel = null;
+    } else {
+      if (pesel.length() != 11) {
+        throw new IllegalArgumentException();
+      }
+      try {
+        new BigInteger(pesel);
+      } catch (NumberFormatException nfe) {
+        throw new IllegalArgumentException();
+      }
+      this.pesel = pesel;
+    }
   }
 
   public AccountType getAccountType() {
@@ -93,6 +114,9 @@ public class Client {
   }
 
   public void setFirstName(String firstName) {
+    if (firstName.length() == 0) {
+      throw new IllegalArgumentException();
+    }
     this.firstName = firstName;
   }
 
@@ -101,6 +125,9 @@ public class Client {
   }
 
   public void setLastName(String lastName) {
+    if (lastName.length() == 0) {
+      throw new IllegalArgumentException();
+    }
     this.lastName = lastName;
   }
 
@@ -117,6 +144,14 @@ public class Client {
   }
 
   public void setPhoneNumber(String phoneNumber) {
+    if (phoneNumber.length() != 9) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      new BigInteger(phoneNumber);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.phoneNumber = phoneNumber;
   }
 
@@ -126,6 +161,11 @@ public class Client {
 
   public void setEmail(String email) {
     this.email = email;
+    if (email.length() == 0) {
+      this.email = null;
+    } else {
+      this.email = email;
+    }
   }
 
   public String getLogin() {
@@ -133,6 +173,9 @@ public class Client {
   }
 
   public void setLogin(String login) {
+    if (login.length() < 8) {
+      throw new IllegalArgumentException();
+    }
     this.login = login;
   }
 
@@ -141,6 +184,9 @@ public class Client {
   }
 
   public void setPassword(String password) {
+    if (password.length() < 8) {
+      throw new IllegalArgumentException();
+    }
     this.password = password;
   }
 

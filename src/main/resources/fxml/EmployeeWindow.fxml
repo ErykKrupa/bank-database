@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -19,8 +20,8 @@
 <?import javafx.scene.text.Font?>
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="381.0"
-         prefWidth="645.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/10.0.1"
-         xmlns:fx="http://javafx.com/fxml/1">
+         prefWidth="645.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121"
+         xmlns:fx="http://javafx.com/fxml/1" fx:controller="dochniak_krupa.controller.EmployeeWindowController">
     <tabs>
         <Tab text="Add Client">
             <content>
@@ -45,6 +46,7 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints/>
                                     </rowConstraints>
                                     <children>
                                         <Label prefHeight="18.0" prefWidth="274.0" text="Account type:"
@@ -53,7 +55,7 @@
                                                GridPane.rowIndex="2"/>
                                         <Label prefHeight="18.0" prefWidth="274.0" text="Last name:"
                                                GridPane.rowIndex="3"/>
-                                        <Label prefHeight="18.0" prefWidth="274.0" text="Birthdate:"
+                                        <Label prefHeight="18.0" prefWidth="274.0" text="Birth date:"
                                                GridPane.rowIndex="4"/>
                                         <Label prefHeight="18.0" prefWidth="274.0" text="Phone number:"
                                                GridPane.rowIndex="5"/>
@@ -62,17 +64,29 @@
                                         <Label prefHeight="18.0" prefWidth="274.0" GridPane.columnIndex="1"
                                                GridPane.rowIndex="8"/>
                                         <Label prefHeight="18.0" prefWidth="274.0" text="PESEL:"/>
-                                        <Button mnemonicParsing="false" text="Create customer account"
-                                                GridPane.columnIndex="1" GridPane.halignment="CENTER"
-                                                GridPane.rowIndex="8" GridPane.valignment="CENTER"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                                        <TextField prefWidth="502.0" GridPane.columnIndex="1"/>
-                                        <TextField prefWidth="478.0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                        <Button mnemonicParsing="false" onMouseClicked="#createClientAccount"
+                                                text="Create customer account" GridPane.columnIndex="1"
+                                                GridPane.halignment="CENTER" GridPane.rowIndex="9"
+                                                GridPane.valignment="CENTER"/>
+                                        <TextField fx:id="addClientPesel" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="0"/>
+                                        <TextField fx:id="addClientAccountType" text="we can add drop down list here"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="addClientFirstName" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="2"/>
+                                        <TextField fx:id="addClientLastName" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="3"/>
+                                        <TextField fx:id="addClientBirthDate"
+                                                   text="we can add here a drop down list to choose a date"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                        <TextField fx:id="addClientPhoneNumber" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="5"/>
+                                        <TextField fx:id="addClientEmail" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="6"/>
+                                        <TextField fx:id="addClientLogin" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="7"/>
+                                        <PasswordField fx:id="addClientPassword" GridPane.columnIndex="1"
+                                                       GridPane.rowIndex="8"/>
                                     </children>
                                 </GridPane>
                             </content>
@@ -85,10 +99,10 @@
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <TextField layoutX="166.0" layoutY="36.0" prefHeight="35.0" prefWidth="234.0"
-                                   promptText="Account Number"/>
+                        <TextField fx:id="deleteClientAccountNumber" layoutX="166.0" layoutY="36.0" prefHeight="35.0"
+                                   prefWidth="234.0" promptText="Account Number"/>
                         <Button layoutX="198.0" layoutY="93.0" mnemonicParsing="false"
-                                text="Remove client from database"/>
+                                onMouseClicked="#deleteClientAccount" text="Remove customer account"/>
                     </children>
                 </AnchorPane>
             </content>
@@ -135,24 +149,34 @@
                                         <Label prefHeight="18.0" prefWidth="274.0" GridPane.columnIndex="1"
                                                GridPane.rowIndex="10"/>
                                         <Label prefHeight="18.0" prefWidth="274.0" text="PESEL:" GridPane.rowIndex="1"/>
-                                        <Button mnemonicParsing="false" text="Save" GridPane.columnIndex="1"
-                                                GridPane.halignment="CENTER" GridPane.rowIndex="10"
-                                                GridPane.valignment="CENTER"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                                        <TextField prefHeight="27.0" prefWidth="483.0" GridPane.columnIndex="1"
-                                                   GridPane.rowIndex="1"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                                        <Button mnemonicParsing="false" onMouseClicked="#updateClientAccount"
+                                                text="Save" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                                GridPane.rowIndex="10" GridPane.valignment="CENTER"/>
                                         <Label text="Account number:"/>
-                                        <TextField prefWidth="484.0" GridPane.columnIndex="1"/>
                                         <Label text="Login:" GridPane.rowIndex="8"/>
-                                        <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="8"/>
                                         <Label text="Password:" GridPane.rowIndex="9"/>
-                                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+
+                                        <TextField fx:id="updateClientAccountNumber" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="0"/>
+                                        <TextField fx:id="updateClientPesel" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="1"/>
+                                        <TextField fx:id="updateClientAccountType" text="we can add drop down list here"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="updateClientFirstName" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="3"/>
+                                        <TextField fx:id="updateClientLastName" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="4"/>
+                                        <TextField fx:id="updateClientBirthDate"
+                                                   text="we can add here a drop down list to choose a date"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                        <TextField fx:id="updateClientPhoneNumber" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="6"/>
+                                        <TextField fx:id="updateClientEmail" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="7"/>
+                                        <TextField fx:id="updateClientLogin" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="8"/>
+                                        <PasswordField fx:id="updateClientPassword" GridPane.columnIndex="1"
+                                                       GridPane.rowIndex="9"/>
                                     </children>
                                 </GridPane>
                             </content>
@@ -167,19 +191,26 @@
                     <children>
                         <Label layoutX="16.0" layoutY="4.0" prefHeight="28.0" prefWidth="171.0"
                                text="Searching parameters"/>
-                        <Button layoutX="17.0" layoutY="173.0" mnemonicParsing="false" prefHeight="27.0"
-                                prefWidth="170.0" text="Search"/>
+                        <TextField layoutX="16.0" layoutY="32.0" prefHeight="26.0" prefWidth="172.0"
+                                   promptText="Account number" fx:id="searchClientAccountNumber"/>
+                        <TextField layoutX="16.0" layoutY="110.0" prefHeight="26.0" prefWidth="172.0"
+                                   promptText="Phone number" fx:id="searchClientPhoneNumber"/>
+                        <TextField layoutX="16.0" layoutY="188.0" prefHeight="26.0" prefWidth="172.0" promptText="PESEL"
+                                   fx:id="searchClientPesel"/>
+                        <TextField layoutX="16.0" layoutY="266.0" prefHeight="26.0" prefWidth="172.0" promptText="Email"
+                                   fx:id="searchClientEmail"/>
+                        <Button layoutX="17.0" layoutY="58.0" mnemonicParsing="false" prefHeight="27.0"
+                                prefWidth="170.0" text="Search" onMouseClicked="#searchClientAccountNumber"/>
+                        <Button layoutX="17.0" layoutY="136.0" mnemonicParsing="false" prefHeight="27.0"
+                                prefWidth="170.0" text="Search" onMouseClicked="#searchClientPhoneNumber"/>
+                        <Button layoutX="17.0" layoutY="214.0" mnemonicParsing="false" prefHeight="27.0"
+                                prefWidth="170.0" text="Search" onMouseClicked="#searchClientPesel"/>
+                        <Button layoutX="17.0" layoutY="292.0" mnemonicParsing="false" prefHeight="27.0"
+                                prefWidth="170.0" text="Search" onMouseClicked="#searchClientEmail"/>
                         <Separator layoutX="194.0" layoutY="9.0" orientation="VERTICAL" prefHeight="356.0"
                                    prefWidth="9.0"/>
-                        <TextField layoutX="15.0" layoutY="104.0" prefHeight="26.0" prefWidth="172.0"
-                                   promptText="First name"/>
-                        <TextField layoutX="16.0" layoutY="139.0" prefHeight="26.0" prefWidth="172.0"
-                                   promptText="Last name"/>
-                        <TextField layoutX="16.0" layoutY="32.0" prefHeight="26.0" prefWidth="172.0"
-                                   promptText="Account number"/>
-                        <TextField layoutX="16.0" layoutY="68.0" prefHeight="26.0" prefWidth="172.0"
-                                   promptText="PESEL"/>
-                        <TextArea layoutX="201.0" layoutY="2.0" prefHeight="363.0" prefWidth="439.0" wrapText="true"/>
+                        <TextArea layoutX="201.0" layoutY="2.0" prefHeight="363.0" prefWidth="439.0" wrapText="true"
+                                  editable="false" fx:id="searchClientOutput"/>
                     </children>
                 </AnchorPane>
             </content>
@@ -236,26 +267,42 @@
             <content>
                 <Pane prefHeight="200.0" prefWidth="200.0">
                     <children>
-                        <TextField layoutX="13.0" layoutY="58.0" prefHeight="35.0" prefWidth="234.0"
-                                   promptText="Account number"/>
-                        <CheckBox layoutX="14.0" layoutY="100.0" mnemonicParsing="false" text="Credit Card"/>
-                        <CheckBox layoutX="14.0" layoutY="127.0" mnemonicParsing="false" text="Debit Card"/>
-                        <Button layoutX="70.0" layoutY="153.0" mnemonicParsing="false" text="Generate Card Data"/>
-                        <Separator layoutX="297.0" layoutY="6.0" orientation="VERTICAL" prefHeight="357.0"
-                                   prefWidth="0.0"/>
                         <Label layoutX="69.0" layoutY="14.0" prefHeight="31.0" prefWidth="114.0" text="GENERATE">
                             <font>
                                 <Font name="System Bold Italic" size="21.0"/>
                             </font>
                         </Label>
+                        <TextField fx:id="createCardAccountNumber" layoutX="13.0" layoutY="58.0" prefHeight="35.0"
+                                   prefWidth="234.0" promptText="Account number"/>
+                        <RadioButton fx:id="creditCardGenerateRadioButton" layoutX="45.0" layoutY="100.0"
+                                     mnemonicParsing="false" selected="true" text="Credit Card">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="generateCardType"/>
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="debitCardGenerateRadioButton" layoutX="46.0" layoutY="128.0"
+                                     mnemonicParsing="false" text="Debit Card" toggleGroup="$generateCardType"/>
+                        <Button layoutX="70.0" layoutY="164.0" mnemonicParsing="false" onMouseClicked="#createCard"
+                                text="Generate Card"/>
+                        <Separator layoutX="297.0" layoutY="6.0" orientation="VERTICAL" prefHeight="357.0"
+                                   prefWidth="0.0"/>
                         <Label layoutX="404.0" layoutY="14.0" prefHeight="31.0" prefWidth="75.0" text="DELETE">
                             <font>
                                 <Font name="System Bold Italic" size="21.0"/>
                             </font>
                         </Label>
-                        <TextField layoutX="318.0" layoutY="58.0" prefHeight="35.0" prefWidth="234.0"
-                                   promptText="Card number"/>
-                        <Button layoutX="396.0" layoutY="147.0" mnemonicParsing="false" text="Delete Card"/>
+                        <TextField fx:id="deleteCardCardNumber" layoutX="318.0" layoutY="58.0" prefHeight="35.0"
+                                   prefWidth="234.0" promptText="Card number"/>
+                        <RadioButton fx:id="creditCardDeleteRadioButton" layoutX="364.0" layoutY="100.0"
+                                     mnemonicParsing="false" selected="true" text="Credit Card">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="deleteCardType"/>
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="debitCardDeleteRadioButton" layoutX="365.0" layoutY="128.0"
+                                     mnemonicParsing="false" text="Debit Card" toggleGroup="$deleteCardType"/>
+                        <Button layoutX="402.0" layoutY="164.0" mnemonicParsing="false" onMouseClicked="#deleteCard"
+                                text="Delete Card"/>
                     </children>
                 </Pane>
             </content>

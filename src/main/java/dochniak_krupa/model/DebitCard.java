@@ -3,6 +3,7 @@ package dochniak_krupa.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigInteger;
 import java.sql.Date;
 
 @Entity
@@ -31,23 +32,15 @@ public class DebitCard {
   }
 
   public void setNumber(String number) {
+    if (number.length() != 16) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      new BigInteger(number);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
     this.number = number;
-  }
-
-  public String getCardVerification() {
-    return cardVerification;
-  }
-
-  public void setCardVerification(String cardVerification) {
-    this.cardVerification = cardVerification;
-  }
-
-  public Date getExpiryDate() {
-    return expiryDate;
-  }
-
-  public void setExpiryDate(Date expiryDate) {
-    this.expiryDate = expiryDate;
   }
 
   public Client getClient() {
@@ -56,5 +49,33 @@ public class DebitCard {
 
   public void setClient(Client client) {
     this.client = client;
+  }
+
+  public String getCardVerification() {
+    return cardVerification;
+  }
+
+  public void setCardVerification(String cardVerification) {
+    if (cardVerification.length() != 3) {
+      throw new IllegalArgumentException();
+    }
+    try {
+      Integer.parseInt(cardVerification);
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException();
+    }
+    this.cardVerification = cardVerification;
+  }
+
+  public Date getExpiryDate() {
+    return expiryDate;
+  }
+
+  public void setExpiryDate(Date expiryDate) {
+    if (expiryDate.compareTo(new Date(System.currentTimeMillis() + 3600)) > 0) {
+      this.expiryDate = expiryDate;
+    } else {
+      throw new IllegalArgumentException();
+    }
   }
 }
