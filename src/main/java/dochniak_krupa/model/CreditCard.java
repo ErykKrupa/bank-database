@@ -12,7 +12,7 @@ public class CreditCard {
   @Id
   @Size(max = 16)
   private String number;
-  
+
   @NotNull
   @ManyToOne
   @JoinColumn(name = "account_number")
@@ -80,11 +80,12 @@ public class CreditCard {
   }
 
   public void setExpiryDate(Date expiryDate) {
-    if (expiryDate.compareTo(new Date(System.currentTimeMillis() + 3600)) > 0) {
+    /*if (expiryDate.compareTo(new Date(System.currentTimeMillis() + 3600)) > 0) {
       this.expiryDate = expiryDate;
     } else {
       throw new IllegalArgumentException();
-    }
+    }*/
+    this.expiryDate = expiryDate;
   }
 
   public BigInteger getFundsLimit() {

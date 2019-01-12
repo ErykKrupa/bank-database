@@ -72,10 +72,11 @@ public class DebitCard {
   }
 
   public void setExpiryDate(Date expiryDate) {
-    if (expiryDate.compareTo(new Date(System.currentTimeMillis() + 3600)) > 0) {
+    /*if (expiryDate.compareTo(new Date(System.currentTimeMillis() + 3600)) > 0) {
       this.expiryDate = expiryDate;
     } else {
       throw new IllegalArgumentException();
-    }
+    }*/
+    this.expiryDate = expiryDate;
   }
 }
