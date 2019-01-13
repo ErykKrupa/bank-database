@@ -23,6 +23,7 @@ public class FillDatabase {
   private static Faker faker = new Faker();
 
   public static void main(String[] args) {
+    HibernateUtility.setSessionFactory("root","root");
     fillCurrencies();
     fillClients(10000);
     fillCreditCards();
@@ -53,7 +54,7 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -111,7 +112,7 @@ public class FillDatabase {
 
       tx.commit();
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -133,7 +134,7 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -164,7 +165,7 @@ public class FillDatabase {
         session.save(c);
         tx.commit();
       } catch (HibernateException e) {
-         e.printStackTrace();
+        e.printStackTrace();
       }
     }
   }
@@ -199,7 +200,7 @@ public class FillDatabase {
 
         tx.commit();
       } catch (HibernateException e) {
-         e.printStackTrace();
+        e.printStackTrace();
       }
     }
   }
@@ -227,7 +228,7 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 

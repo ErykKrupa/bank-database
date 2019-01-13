@@ -1,9 +1,7 @@
 package dochniak_krupa.controller;
 
 import dochniak_krupa.database.HibernateUtility;
-import dochniak_krupa.model.Client;
 import dochniak_krupa.model.Employee;
-import dochniak_krupa.session.SessionPreferences;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -47,6 +45,7 @@ public class SignInWindowController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     loadCheckboxData();
+    HibernateUtility.setSessionFactory("loginuser","loginuserpassword");
   }
 
   private void loadCheckboxData() {
@@ -57,31 +56,66 @@ public class SignInWindowController implements Initializable {
   // checks if credentials exist in DB and returns value of window to display
   private String validateSignIn(String user) throws IllegalArgumentException {
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-      String query = "FROM " + user + " WHERE login=:login AND password=:password";
-      Query sqlQuery = session.createQuery(query);
-      sqlQuery.setParameter("login", loginTxtField.getText());
-      sqlQuery.setParameter("password", passwordTxtField.getText());
-      List users = sqlQuery.list();
-
-      // if user is an employee we must check his access type
-      // in order to display proper window
-      if (!users.iterator().hasNext()) throw new IllegalArgumentException();
-      if (user.equals("Employee")) {
-        switch (((Employee) users.get(0)).getAccess().toString()) {
-          case "common":
-            return "Employee";
-          case "CEO":
-            return "CEO";
-          case "admin":
-            return "Admin";
+      if (user.equals("Client")) {
+        String query = "SELECT 1 FROM Client WHERE login=:login AND password=:password";
+        Query sqlQuery = session.createQuery(query);
+        sqlQuery.setParameter("login", loginTxtField.getText());
+        sqlQuery.setParameter("password", passwordTxtField.getText());
+        List users = sqlQuery.list();
+        if (!users.iterator().hasNext()) throw new IllegalArgumentException();
+        else {
+          logToDBAccount("Client");
+          return "Client";
         }
-      } else {
-        SessionPreferences.pref.put("account_number", ((Client) users.get(0)).getAccountNumber());
+      } else if (user.equals("Employee")) {
+        String query = "SELECT access FROM Employee WHERE login=:login AND password=:password";
+        Query sqlQuery = session.createQuery(query);
+        sqlQuery.setParameter("login", loginTxtField.getText());
+        sqlQuery.setParameter("password", passwordTxtField.getText());
+        List users = sqlQuery.list();
+        if (!users.iterator().hasNext()) throw new IllegalArgumentException();
+        else {
+          switch (((Employee) users.get(0)).getAccess().toString()) {
+            case "common":
+              logToDBAccount("Employee");
+              return "Employee";
+            case "CEO":
+              logToDBAccount("CEO");
+              return "CEO";
+            case "admin":
+              logToDBAccount("admin");
+              return "Admin";
+          }
+        }
       }
     } catch (HibernateException e) {
       e.printStackTrace();
     }
-    return "Client";
+    return "Error";
+  }
+
+  private void logToDBAccount(String account){
+    HibernateUtility.getSessionFactory().close();
+    String login="",password="";
+    switch(account){
+      case "Employee":{
+        login = "employee";
+        password = "employeepassword";
+      }break;
+      case "CEO":{
+        login = "ceo";
+        password = "ceopassword";
+      }break;
+      case "Admin":{
+        login = "root";
+        password = "root";
+      }break;
+      case "Client":{
+        login = "bankclient";
+        password = "clientpassword";
+      }break;
+    }
+    HibernateUtility.setSessionFactory(login,password);
   }
 
   // loads proper fxml file depending on given parameter
