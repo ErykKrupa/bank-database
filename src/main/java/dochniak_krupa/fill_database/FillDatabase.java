@@ -9,8 +9,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -23,14 +23,19 @@ public class FillDatabase {
   private static Faker faker = new Faker();
 
   public static void main(String[] args) {
-    HibernateUtility.setSessionFactory("root","root");
-    fillCurrencies();
-    fillClients(10000);
-    fillCreditCards();
-    fillDebitCards();
-    fillAccountCurrencies();
-    fillTransactions(10000);
-    fillEmployees(10000);
+    /*String password = "databaseuser";
+    String dbpass = BCrypt.hashpw(password,BCrypt.gensalt());
+    System.out.println(dbpass);
+    System.out.println(BCrypt.checkpw("databaseuser",dbpass));*/
+
+    HibernateUtility.setSessionFactory("root", "root");
+    //    fillCurrencies();
+       //fillClients(1);
+    //    fillCreditCards();
+    //    fillDebitCards();
+    //    fillAccountCurrencies();
+    //    fillTransactions(10000);
+        fillEmployees(1);
   }
 
   private static void fillDebitCards() {
@@ -157,10 +162,35 @@ public class FillDatabase {
                 + c.getLastName().replace("'", "")
                 + random.nextInt(100)
                 + "@domain.com");
-        c.setLogin(generateNumber(8));
-        c.setPassword(faker.code().asin());
+        String login = generateNumber(8);
+        c.setLogin(login);
+        String password = faker.code().asin();
+        c.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         c.setActive(generateIsActiveValue());
         c.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
+
+        // Creating DB account for that user
+        String sql = "CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password + "';";
+        Query q = session.createSQLQuery(sql);
+        q.executeUpdate();
+        String sql2 = "GRANT SELECT ON bank.account_currency TO `" + login + "`@`localhost`;";
+        Query q2= session.createSQLQuery(sql2);
+        q2.executeUpdate();
+        String sql3 = "GRANT INSERT, UPDATE, SELECT ON bank.transfer_log TO `" + login + "`@`localhost`;";
+        Query q3 = session.createSQLQuery(sql3);
+        q3.executeUpdate();
+        String sql4 = "GRANT SELECT ON bank.currency TO `" + login + "`@`localhost`;";
+        Query q4 = session.createSQLQuery(sql4);
+        q4.executeUpdate();
+        String sql5 = "GRANT SELECT ON bank.debit_card TO `" + login + "`@`localhost`;";
+        Query q5 = session.createSQLQuery(sql5);
+        q5.executeUpdate();
+        String sql6 = "GRANT SELECT ON bank.credit_card TO `" + login + "`@`localhost`;";
+        Query q6 = session.createSQLQuery(sql6);
+        q6.executeUpdate();
+        String sql7 = "GRANT SELECT, UPDATE ON bank.client TO `" + login + "`@`localhost`;";
+        Query q7 = session.createSQLQuery(sql7);
+        q7.executeUpdate();
 
         session.save(c);
         tx.commit();
@@ -191,10 +221,30 @@ public class FillDatabase {
         if (em.getPosition().equals("CEO")) em.setAccess(AccessType.CEO);
         else em.setAccess(AccessType.common);
         em.setSalary(generateSalary(em.getPosition()));
-        em.setLogin(generateNumber(8));
-        em.setPassword(faker.code().asin());
+        String login = generateNumber(8);
+        em.setLogin(login);
+        String password = faker.code().asin();
+        em.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         em.setWorking(generateIsActiveValue());
         em.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
+
+        session.createSQLQuery("CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password + "';").executeUpdate();
+        session.createSQLQuery("GRANT SELECT ON bank.account_currency TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT, INSERT, UPDATE ON bank.client TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT ON bank.account_currency TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT ON bank.transfer_log TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT INSERT, DELETE ON bank.credit_card TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT INSERT, DELETE ON bank.debit_card TO `" + login + "`@`localhost`;").executeUpdate();
+
+        switch (em.getAccess().toString()){
+          case "common":{
+            session.createSQLQuery("GRANT INSERT, UPDATE ON bank.employee TO `" + login + "`@`localhost`;").executeUpdate();
+          } break;
+          case "CEO":{
+            session.createSQLQuery("GRANT INSERT, UPDATE, DELETE ON bank.employee TO `" + login + "`@`localhost`;").executeUpdate();
+          } break;
+
+        }
 
         session.save(em);
 
