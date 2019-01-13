@@ -30,8 +30,14 @@ public class ClientWindowController implements Initializable {
       Query sqlQuery = session.createQuery(query);
       sqlQuery.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
       List accountInfo = sqlQuery.list();
-      amountLabel.setText(((AccountCurrency) accountInfo.get(0)).getBalance().toString());
-      currencyLabel.setText(((AccountCurrency) accountInfo.get(0)).getCurrency().getIso());
+      if(accountInfo.iterator().hasNext()){
+        amountLabel.setText(((AccountCurrency) accountInfo.get(0)).getBalance().toString());
+        currencyLabel.setText(((AccountCurrency) accountInfo.get(0)).getCurrency().getIso());
+      }else{
+        amountLabel.setText("You don't have an account!");
+        currencyLabel.setText("");
+      }
+
     } catch (HibernateException e) {
       e.printStackTrace();
     }

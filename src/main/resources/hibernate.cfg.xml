@@ -11,13 +11,7 @@
             com.mysql.jdbc.Driver
         </property>
         <property name="hibernate.connection.url">
-            jdbc:mysql://localhost:3305/bank?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC&amp;autoReconnect=true&amp;useSSL=false
-        </property>
-        <property name="hibernate.connection.username">
-            root
-        </property>
-        <property name="hibernate.connection.password">
-            root123
+            jdbc:mysql://localhost/bank?serverTimezone=UTC&amp;useSSL=FALSE&amp;allowPublicKeyRetrieval=true
         </property>
 
         <property name="hibernate.id.new_generator_mappings">false</property>

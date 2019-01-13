@@ -1,0 +1,10 @@
+DROP USER IF EXISTS `ceo`@`localhost`;
+CREATE USER `employee`@`localhost` IDENTIFIED BY 'ceopassword';
+GRANT SELECT ON bank.account_currency TO `ceo`@`localhost`;
+GRANT SELECT, INSERT, UPDATE ON bank.client TO `ceo`@`localhost`;
+GRANT SELECT ON bank.account_currency TO `ceo`@`localhost`;
+GRANT SELECT ON bank.transfer_log TO `ceo`@`localhost`;
+GRANT INSERT, DELETE ON bank.debit_card TO `ceo`@`localhost`;
+GRANT INSERT, DELETE ON bank.credit_card TO `ceo`@`localhost`;
+GRANT SELECT, INSERT, UPDATE, DELETE ON bank.employee TO `ceo`@`localhost`;
+FLUSH PRIVILEGES ;

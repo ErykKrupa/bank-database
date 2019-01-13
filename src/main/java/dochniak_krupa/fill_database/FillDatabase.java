@@ -9,8 +9,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -23,13 +23,16 @@ public class FillDatabase {
   private static Faker faker = new Faker();
 
   public static void main(String[] args) {
-    fillCurrencies();
-    fillClients(10000);
-    fillCreditCards();
-    fillDebitCards();
-    fillAccountCurrencies();
-    fillTransactions(10000);
-    fillEmployees(10000);
+    HibernateUtility.setSessionFactory("root", "root");
+//       fillCurrencies();
+//       fillClients(10000);
+//       fillCreditCards();
+//       fillDebitCards();
+//       fillAccountCurrencies();
+//       fillTransactions(10000);
+//       fillEmployees(10000);
+    fillClientsWithEncryptedPasswordsAndBDAccounts(1);
+    fillEmployeesWithEncryptedPasswordsAndDBAccounts(1);
   }
 
   private static void fillDebitCards() {
@@ -53,7 +56,7 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -111,7 +114,7 @@ public class FillDatabase {
 
       tx.commit();
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -133,11 +136,11 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
-  private static void fillClients(int number) {
+  private static void fillClientsWithEncryptedPasswordsAndBDAccounts(int number) {
     for (int i = 0; i < number; i++) {
       try (Session session = HibernateUtility.getSessionFactory().openSession()) {
         Transaction tx = session.beginTransaction();
@@ -156,20 +159,79 @@ public class FillDatabase {
                 + c.getLastName().replace("'", "")
                 + random.nextInt(100)
                 + "@domain.com");
-        c.setLogin(generateNumber(8));
-        c.setPassword(faker.code().asin());
+        String login = "11111111";//generateNumber(8);
+        c.setLogin(login);
+        String password = "a";//faker.code().asin();
+        c.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        c.setActive(generateIsActiveValue());
+        c.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
+
+        // Creating DB account for that user
+        String sql = "CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password + "';";
+        Query q = session.createSQLQuery(sql);
+        q.executeUpdate();
+        String sql2 = "GRANT SELECT ON bank.account_currency TO `" + login + "`@`localhost`;";
+        Query q2= session.createSQLQuery(sql2);
+        q2.executeUpdate();
+        String sql3 = "GRANT INSERT, UPDATE, SELECT ON bank.transfer_log TO `" + login + "`@`localhost`;";
+        Query q3 = session.createSQLQuery(sql3);
+        q3.executeUpdate();
+        String sql4 = "GRANT SELECT ON bank.currency TO `" + login + "`@`localhost`;";
+        Query q4 = session.createSQLQuery(sql4);
+        q4.executeUpdate();
+        String sql5 = "GRANT SELECT ON bank.debit_card TO `" + login + "`@`localhost`;";
+        Query q5 = session.createSQLQuery(sql5);
+        q5.executeUpdate();
+        String sql6 = "GRANT SELECT ON bank.credit_card TO `" + login + "`@`localhost`;";
+        Query q6 = session.createSQLQuery(sql6);
+        q6.executeUpdate();
+        String sql7 = "GRANT SELECT, UPDATE ON bank.client TO `" + login + "`@`localhost`;";
+        Query q7 = session.createSQLQuery(sql7);
+        q7.executeUpdate();
+
+        session.save(c);
+        tx.commit();
+      } catch (HibernateException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private static void fillClients(int number) {
+    for (int i = 0; i < number; i++) {
+      try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+        Transaction tx = session.beginTransaction();
+
+        Client c = new Client();
+
+        c.setBirthDate(new Date(faker.date().birthday(18, 75).getTime()));
+        c.setPesel(generatePeselUsingBirthdate(c.getBirthDate()));
+        c.setAccountNumber(generateNumber(26));
+        c.setAccountType(generateAccountType());
+        c.setFirstName(faker.name().firstName());
+        c.setLastName(faker.name().lastName());
+        c.setPhoneNumber(generateNumber(9));
+        c.setEmail(
+                c.getFirstName().replace("'", "")
+                        + c.getLastName().replace("'", "")
+                        + random.nextInt(100)
+                        + "@domain.com");
+        String login = generateNumber(8);
+        c.setLogin(login);
+        String password = faker.code().asin();
+        c.setPassword(password);
         c.setActive(generateIsActiveValue());
         c.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
 
         session.save(c);
         tx.commit();
       } catch (HibernateException e) {
-         e.printStackTrace();
+        e.printStackTrace();
       }
     }
   }
 
-  private static void fillEmployees(int number) {
+  private static void fillEmployeesWithEncryptedPasswordsAndDBAccounts(int number) {
     for (int i = 0; i < number; i++) {
       try (Session session = HibernateUtility.getSessionFactory().openSession()) {
         Transaction tx = session.beginTransaction();
@@ -190,8 +252,65 @@ public class FillDatabase {
         if (em.getPosition().equals("CEO")) em.setAccess(AccessType.CEO);
         else em.setAccess(AccessType.common);
         em.setSalary(generateSalary(em.getPosition()));
-        em.setLogin(generateNumber(8));
-        em.setPassword(faker.code().asin());
+        String login = "11111111";//generateNumber(8);
+        em.setLogin(login);
+        String password = "a";//faker.code().asin();
+        em.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        em.setWorking(generateIsActiveValue());
+        em.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
+
+        session.createSQLQuery("CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password + "';").executeUpdate();
+        session.createSQLQuery("GRANT SELECT ON bank.account_currency TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT, INSERT, UPDATE ON bank.client TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT ON bank.account_currency TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT ON bank.transfer_log TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT INSERT, DELETE ON bank.credit_card TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT INSERT, DELETE ON bank.debit_card TO `" + login + "`@`localhost`;").executeUpdate();
+
+        switch (em.getAccess().toString()){
+          case "common":{
+            session.createSQLQuery("GRANT INSERT, UPDATE ON bank.employee TO `" + login + "`@`localhost`;").executeUpdate();
+          } break;
+          case "CEO":{
+            session.createSQLQuery("GRANT INSERT, UPDATE, DELETE ON bank.employee TO `" + login + "`@`localhost`;").executeUpdate();
+          } break;
+
+        }
+
+        session.save(em);
+
+        tx.commit();
+      } catch (HibernateException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private static void fillEmployees(int number) {
+    for (int i = 0; i < number; i++) {
+      try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+        Transaction tx = session.beginTransaction();
+
+        Employee em = new Employee();
+
+        em.setBirthDate(new Date(faker.date().birthday(18, 60).getTime()));
+        em.setPesel(generatePeselUsingBirthdate(em.getBirthDate()));
+        em.setFirstName(faker.name().firstName());
+        em.setLastName(faker.name().lastName());
+        em.setPhoneNumber(generateNumber(9));
+        em.setEmail(
+                em.getFirstName().replace("'", "")
+                        + em.getLastName().replace("'", "")
+                        + random.nextInt(100)
+                        + "@bankemployee.com");
+        em.setPosition(generatePosition());
+        if (em.getPosition().equals("CEO")) em.setAccess(AccessType.CEO);
+        else em.setAccess(AccessType.common);
+        em.setSalary(generateSalary(em.getPosition()));
+        String login = generateNumber(8);
+        em.setLogin(login);
+        String password = faker.code().asin();
+        em.setPassword(password);
         em.setWorking(generateIsActiveValue());
         em.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
 
@@ -199,7 +318,7 @@ public class FillDatabase {
 
         tx.commit();
       } catch (HibernateException e) {
-         e.printStackTrace();
+        e.printStackTrace();
       }
     }
   }
@@ -227,7 +346,7 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
