@@ -24,9 +24,9 @@ public class FillDatabase {
   private static Faker faker = new Faker();
 
   public static void main(String[] args) {
-    fillClients(1);
-    // fillTransactions(10000);
-    // fillEmployees(10000);
+//    fillClients(1000);
+//    fillEmployees(1000);
+    fillTransactions(10000);
   }
 
   private static void fillClients(int number) {

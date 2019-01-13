@@ -12,5 +12,3 @@ create table account_currency
   references currency (iso)
 );
 select * from account_currency;
-
-insert into account_currency values ("")

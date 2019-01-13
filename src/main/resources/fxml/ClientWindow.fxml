@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dochniak_krupa.controller.ClientWindowController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dochniak_krupa.controller.ClientWindowController">
     <tabs>
         <Tab fx:id="accountBalanceTab" onSelectionChanged="#onAccountBalanceTabClick" text="Account Balance">
             <content>
@@ -28,12 +28,12 @@
                                 <Font name="Calibri Bold" size="21.0" />
                             </font>
                         </Label>
-                        <Label fx:id="amountLabel" layoutX="20.0" layoutY="44.0" prefHeight="43.0" prefWidth="270.0" text="Amount">
+                        <Label fx:id="accountBalanceAmountLabel" alignment="TOP_RIGHT" layoutX="20.0" layoutY="44.0" prefHeight="291.0" prefWidth="197.0" textAlignment="RIGHT">
                             <font>
                                 <Font name="Calibri" size="21.0" />
                             </font>
                         </Label>
-                        <Label fx:id="currencyLabel" layoutX="353.0" layoutY="48.0" prefHeight="34.0" prefWidth="113.0" text="Currency">
+                        <Label fx:id="accountBalanceCurrencyLabel" alignment="TOP_LEFT" layoutX="235.0" layoutY="45.0" prefHeight="289.0" prefWidth="142.0">
                             <font>
                                 <Font name="Calibri" size="21.0" />
                             </font>
@@ -46,18 +46,23 @@
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <TextField fx:id="receiverAccountTxtField" layoutX="31.0" layoutY="26.0" prefHeight="42.0" prefWidth="311.0" promptText="Receiver account number">
+                        <TextField fx:id="newTransferReceiverAccountTxtField" layoutX="31.0" layoutY="26.0" prefHeight="42.0" prefWidth="311.0" promptText="Receiver account number">
                             <font>
                                 <Font size="17.0" />
                             </font>
                         </TextField>
-                        <TextField fx:id="amountOfMoneyTxtField" layoutX="31.0" layoutY="82.0" prefHeight="42.0" prefWidth="311.0" promptText="Amount of money">
+                        <TextField fx:id="newTransferAmountOfMoneyTxtField" layoutX="31.0" layoutY="82.0" prefHeight="42.0" prefWidth="241.0" promptText="Amount of money">
                             <font>
                                 <Font size="17.0" />
                             </font>
                         </TextField>
-                        <ChoiceBox fx:id="currencyChoiceBox" accessibleHelp="sadsadasd" layoutX="372.0" layoutY="84.0" prefHeight="38.0" prefWidth="170.0" />
+                        <ChoiceBox fx:id="newTransferCurrencyChoiceBox" layoutX="372.0" layoutY="84.0" prefHeight="38.0" prefWidth="170.0" />
                         <Button fx:id="commitTransferBtn" layoutX="113.0" layoutY="153.0" mnemonicParsing="false" onMouseClicked="#onTransferCommit" prefHeight="31.0" prefWidth="146.0" text="Commit a transfer" />
+                        <TextField fx:id="newTransferAmountOfDivisionalCurrencyTextField" layoutX="287.0" layoutY="82.0" prefHeight="42.0" prefWidth="55.0" text="0">
+                            <font>
+                                <Font size="17.0" />
+                            </font>
+                        </TextField>
                     </children>
                 </AnchorPane>
             </content>
@@ -66,13 +71,16 @@
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <DatePicker layoutX="14.0" layoutY="36.0" promptText="From" />
-                        <DatePicker layoutX="14.0" layoutY="69.0" promptText="To" />
-                        <TextField layoutX="15.0" layoutY="104.0" prefHeight="26.0" prefWidth="172.0" promptText="Another account number" />
+                        <DatePicker fx:id="transferHistoryDateFrom" editable="false" layoutX="14.0" layoutY="36.0" promptText="From" />
+                        <DatePicker fx:id="transferHistoryDateTo" editable="false" layoutX="14.0" layoutY="69.0" promptText="To" />
+                        <TextField fx:id="transferHistoryReceiverAccountNumber" layoutX="15.0" layoutY="104.0" prefHeight="26.0" prefWidth="172.0" promptText="Receiver account number" />
                         <Label layoutX="16.0" layoutY="4.0" prefHeight="28.0" prefWidth="171.0" text="Searching parameters" />
-                        <Button layoutX="16.0" layoutY="143.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="170.0" text="Search" />
+                        <Button layoutX="16.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#onTransferHistorySearchClick" prefHeight="27.0" prefWidth="170.0" text="Search" />
                         <Separator layoutX="194.0" layoutY="9.0" orientation="VERTICAL" prefHeight="356.0" prefWidth="9.0" />
-                        <TextArea layoutX="203.0" layoutY="6.0" prefHeight="355.0" prefWidth="386.0" />
+                        <TextArea fx:id="transferHistoryLogAmount" editable="false" layoutX="208.0" layoutY="8.0" prefHeight="355.0" prefWidth="92.0" />
+                        <TextArea fx:id="transferHistoryLogCurrencyIso" editable="false" layoutX="300.0" layoutY="8.0" prefHeight="355.0" prefWidth="12.0" />
+                        <TextArea fx:id="transferHistoryLogReceiverAccountNumber" editable="false" layoutX="341.0" layoutY="8.0" prefHeight="355.0" prefWidth="135.0" />
+                        <TextArea fx:id="transferHistoryLogTransactionTime" editable="false" layoutX="476.0" layoutY="8.0" prefHeight="355.0" prefWidth="110.0" />
                     </children>
                 </AnchorPane>
             </content>

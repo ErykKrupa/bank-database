@@ -121,7 +121,7 @@ public class EmployeeWindowController {
       client.setEmail(updateClientEmail.getText());
       client.setLogin(updateClientLogin.getText());
       client.setPassword(updateClientPassword.getText());
-      session.save(client);
+      session.saveOrUpdate(client);
       tx.commit();
     } catch (HibernateException ex) {
       if (tx != null) {

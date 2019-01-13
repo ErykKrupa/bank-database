@@ -10,17 +10,34 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class ClientWindowController implements Initializable {
-  @FXML private Label amountLabel;
-  @FXML private Label currencyLabel;
-  @FXML private TextField receiverAccountTxtField;
-  @FXML private TextField amountOfMoneyTxtField;
-  @FXML private ChoiceBox<String> currencyChoiceBox;
+  @FXML private Label accountBalanceAmountLabel;
+  @FXML private Label accountBalanceCurrencyLabel;
+
+  @FXML private TextField newTransferReceiverAccountTxtField;
+  @FXML private TextField newTransferAmountOfMoneyTxtField;
+  @FXML private TextField newTransferAmountOfDivisionalCurrencyTextField;
+  @FXML private ChoiceBox<String> newTransferCurrencyChoiceBox;
+
+  @FXML private DatePicker transferHistoryDateFrom = new DatePicker();
+  @FXML private DatePicker transferHistoryDateTo = new DatePicker();
+  @FXML private TextField transferHistoryReceiverAccountNumber = new TextField();
+
+  @FXML private TextArea transferHistoryLogAmount = new TextArea();
+  @FXML private TextArea transferHistoryLogCurrencyIso = new TextArea();
+  @FXML private TextArea transferHistoryLogReceiverAccountNumber = new TextArea();
+  @FXML private TextArea transferHistoryLogTransactionTime = new TextArea();
+
   @FXML private TextArea listOfCardsTxtArea;
 
   @FXML
@@ -30,8 +47,21 @@ public class ClientWindowController implements Initializable {
       Query sqlQuery = session.createQuery(query);
       sqlQuery.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
       List accountInfo = sqlQuery.list();
-      amountLabel.setText(((AccountCurrency) accountInfo.get(0)).getBalance().toString());
-      currencyLabel.setText(((AccountCurrency) accountInfo.get(0)).getCurrency().getIso());
+      StringBuilder amountString = new StringBuilder();
+      StringBuilder currencyString = new StringBuilder();
+      for (int i = 0; i < accountInfo.size(); i++) {
+        amountString
+            .append(
+                new BigDecimal(((AccountCurrency) accountInfo.get(i)).getBalance().toString())
+                    .divide(new BigDecimal("100"))
+                    .setScale(2, RoundingMode.DOWN))
+            .append(System.lineSeparator());
+        currencyString
+            .append(((AccountCurrency) accountInfo.get(i)).getCurrency().getIso())
+            .append(System.lineSeparator());
+      }
+      accountBalanceAmountLabel.setText(amountString.toString());
+      accountBalanceCurrencyLabel.setText(currencyString.toString());
     } catch (HibernateException e) {
       e.printStackTrace();
     }
@@ -39,56 +69,156 @@ public class ClientWindowController implements Initializable {
 
   @FXML
   private void onTransferCommit() {
+    String senderAccountNumber = SessionPreferences.pref.get("account_number", "user");
+    String receiverAccountNumber = newTransferReceiverAccountTxtField.getText();
+    if (senderAccountNumber.equals(receiverAccountNumber)) {
+      showAlert("Receiver account number is equal to sender account number.");
+      return;
+    }
+
+    if (!isAccountNumber(receiverAccountNumber)) {
+      return;
+    }
+
+    try {
+      if (new BigInteger(newTransferAmountOfMoneyTxtField.getText()).compareTo(new BigInteger("0"))
+          < 0) {
+        throw new NumberFormatException();
+      }
+    } catch (NumberFormatException nfe) {
+      showAlert("Value in field amount of money is a negative number");
+      return;
+    }
+
+    try {
+      BigInteger bigInteger =
+          new BigInteger(newTransferAmountOfDivisionalCurrencyTextField.getText());
+      if (!(bigInteger.compareTo(new BigInteger("-1")) > 0)
+          || !(bigInteger.compareTo(new BigInteger("100")) < 0)) {
+        throw new NumberFormatException();
+      }
+    } catch (NumberFormatException nfe) {
+      showAlert("Value in field amount divisional currency isn't a number between 0 and 99");
+      return;
+    }
+
+    BigInteger value = new BigInteger(newTransferAmountOfMoneyTxtField.getText() + "00")
+            .add(new BigInteger(newTransferAmountOfDivisionalCurrencyTextField.getText()));
+
+    try {
+      if (!(value.compareTo(new BigInteger("0")) > 0)) {
+        throw new NumberFormatException();
+      }
+    } catch (NumberFormatException nfe) {
+      showAlert("Value of money must be greater than 0.00.");
+      return;
+    }
+
+
+
     Transaction tx = null;
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
       tx = session.beginTransaction();
 
-      TransferLog tlog = new TransferLog();
-      tlog.setSenderAccountNumber(SessionPreferences.pref.get("account_number", "user"));
-      tlog.setReceiverAccountNumber(receiverAccountTxtField.getText());
-      tlog.setCurrencyIso(currencyChoiceBox.getValue());
-      tlog.setAmount(new BigInteger(amountOfMoneyTxtField.getText()));
-      session.save(tlog);
+      Query query =
+          session.createQuery(
+              "FROM AccountCurrency WHERE account_number=:number AND currency_iso=:iso");
+      query.setParameter("number", senderAccountNumber);
+      query.setParameter("iso", newTransferCurrencyChoiceBox.getValue());
+      AccountCurrency senderAC = (AccountCurrency) query.list().get(0);
 
-      if (tlog.getSenderAccountNumber().equals(tlog.getReceiverAccountNumber())) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Invalid receiver account number!");
-        alert.setHeaderText("You've chosen your own account number!");
-        alert.setContentText("Please, try again!");
-        alert.showAndWait();
+      if (senderAC.getBalance().compareTo(value) < 0) {
+        showAlert("You don't have enough funds!");
         return;
       }
 
-      String query = "FROM AccountCurrency WHERE account_number=:number";
-      Query sqlQuery = session.createQuery(query);
-      sqlQuery.setParameter("number", tlog.getSenderAccountNumber());
-      List sender = sqlQuery.list();
-      AccountCurrency senderAC = (AccountCurrency) sender.get(0);
-      senderAC.setBalance(senderAC.getBalance().subtract(tlog.getAmount()));
+      query.setParameter("number", receiverAccountNumber);
+      query.setParameter("iso", newTransferCurrencyChoiceBox.getValue());
+
+      if (query.list().size() == 0) {
+        showAlert("Receiver's account doesn't exists or doesn't serve this currency.");
+        return;
+      }
+
+      AccountCurrency receiverAC = (AccountCurrency) query.list().get(0);
+      senderAC.setBalance(senderAC.getBalance().subtract(value));
+      receiverAC.setBalance(receiverAC.getBalance().add(value));
+
+      TransferLog transferLog = new TransferLog();
+      transferLog.setSenderAccountNumber(senderAccountNumber);
+      transferLog.setReceiverAccountNumber(receiverAccountNumber);
+      transferLog.setCurrencyIso(newTransferCurrencyChoiceBox.getValue());
+      transferLog.setAmount(value);
+
       session.update(senderAC);
-
-      if (senderAC.getBalance().subtract(tlog.getAmount()).compareTo(new BigInteger("0")) < 0) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Not enough funds!");
-        alert.setHeaderText("You don't have enough funds!");
-        alert.setContentText("Please, try again!");
-        alert.showAndWait();
-        return;
-      }
-
-      Query sqlQuery2 = session.createQuery(query);
-      sqlQuery2.setParameter("number", tlog.getReceiverAccountNumber());
-      List receiver = sqlQuery2.list();
-      AccountCurrency receiverAC = (AccountCurrency) receiver.get(0);
-      receiverAC.setBalance(receiverAC.getBalance().add(tlog.getAmount()));
       session.update(receiverAC);
+      session.save(transferLog);
+
+//
+//      Query query2 = session.createQuery("FROM AccountCurrency WHERE account_number=:number AND currency_iso=:iso");
+//      query2.setParameter("number", tlog.getReceiverAccountNumber());
+//      query2.setParameter("iso", newTransferCurrencyChoiceBox.getValue());
+//      List receiver = query2.list();
+//      AccountCurrency receiverAC = (AccountCurrency) receiver.get(0);
+//      receiverAC.setBalance(receiverAC.getBalance().add(tlog.getAmount()));
 
       tx.commit();
-      receiverAccountTxtField.setText("");
-      amountOfMoneyTxtField.setText("");
     } catch (HibernateException e) {
       if (tx != null) tx.rollback();
       e.printStackTrace();
+    }
+    newTransferReceiverAccountTxtField.setText("");
+    newTransferAmountOfMoneyTxtField.setText("0");
+    newTransferAmountOfDivisionalCurrencyTextField.setText("0");
+  }
+
+  @FXML
+  private void onTransferHistorySearchClick() {
+    try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+      if (!isAccountNumber(transferHistoryReceiverAccountNumber.getText())) {
+        return;
+      }
+      Query query =
+          session.createQuery(
+              "FROM TransferLog WHERE senderAccountNumber =: senderAccountNumber AND receiverAccountNumber =: receiverAccountNumber AND transactionTime >=: transactionTimeFrom  AND transactionTime <=: transactionTimeTo");
+      query.setParameter("senderAccountNumber", "03817114205045539930363904");
+      query.setParameter("receiverAccountNumber", transferHistoryReceiverAccountNumber.getText());
+      try {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        query.setParameter(
+            "transactionTimeFrom", sdf.parse(transferHistoryDateFrom.getEditor().getText()));
+        query.setParameter(
+            "transactionTimeTo", sdf.parse(transferHistoryDateTo.getEditor().getText()));
+      } catch (ParseException pe) {
+        pe.printStackTrace();
+      }
+      List transferLogInfo = query.list();
+      StringBuilder amountString = new StringBuilder();
+      StringBuilder currencyIsoString = new StringBuilder();
+      StringBuilder receiverAccountNumberString = new StringBuilder();
+      StringBuilder transactionTimeString = new StringBuilder();
+
+      for (int i = 0; i < transferLogInfo.size(); i++) {
+        amountString
+            .append(
+                new BigDecimal(((TransferLog) transferLogInfo.get(i)).getAmount().toString())
+                    .divide(new BigDecimal("100"))
+                    .setScale(2, RoundingMode.DOWN))
+            .append(System.lineSeparator());
+        currencyIsoString
+            .append(((TransferLog) transferLogInfo.get(i)).getCurrencyIso())
+            .append(System.lineSeparator());
+        receiverAccountNumberString
+            .append(((TransferLog) transferLogInfo.get(i)).getReceiverAccountNumber())
+            .append(System.lineSeparator());
+        transactionTimeString
+            .append(((TransferLog) transferLogInfo.get(i)).getTransactionTime().toString(), 0, 16)
+            .append(System.lineSeparator());
+      }
+      transferHistoryLogAmount.setText(amountString.toString());
+      transferHistoryLogCurrencyIso.setText(currencyIsoString.toString());
+      transferHistoryLogReceiverAccountNumber.setText(receiverAccountNumberString.toString());
+      transferHistoryLogTransactionTime.setText(transactionTimeString.toString());
     }
   }
 
@@ -109,15 +239,19 @@ public class ClientWindowController implements Initializable {
         listOfCardsTxtArea.appendText("Expiry date: " + ((CreditCard) c).getExpiryDate() + "\n");
         listOfCardsTxtArea.appendText("Limit: " + ((CreditCard) c).getFundsLimit() + "\n");
         listOfCardsTxtArea.appendText("Used funds: " + ((CreditCard) c).getUsedFunds() + "\n");
-        listOfCardsTxtArea.appendText(
-            "------------------------------------------------------" + "\n");
       }
 
       String query2 = "FROM DebitCard WHERE account_number=:accNum";
       Query sqlQuery2 = session.createQuery(query2);
       sqlQuery2.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
       List debitCards = sqlQuery2.list();
-      if (debitCards.iterator().hasNext()) listOfCardsTxtArea.appendText("Debit Cards:" + "\n");
+      if (debitCards.iterator().hasNext()) {
+        listOfCardsTxtArea.appendText(
+            "------------------------------------------------------"
+                + System.lineSeparator()
+                + "Debit Cards:"
+                + System.lineSeparator());
+      }
       for (Object c : debitCards) {
         listOfCardsTxtArea.appendText(
             "------------------------------------------------------" + "\n");
@@ -125,8 +259,6 @@ public class ClientWindowController implements Initializable {
         listOfCardsTxtArea.appendText(
             ("Verification number: " + ((DebitCard) c).getCardVerification() + "\n"));
         listOfCardsTxtArea.appendText("Expiry date: " + ((DebitCard) c).getExpiryDate() + "\n");
-        listOfCardsTxtArea.appendText(
-            "------------------------------------------------------" + "\n");
       }
     } catch (HibernateException e) {
       e.printStackTrace();
@@ -142,10 +274,34 @@ public class ClientWindowController implements Initializable {
   private void loadChoiceBoxData() {
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
       List currencies = session.createQuery("SELECT iso FROM Currency").list();
-      for (Object c : currencies) currencyChoiceBox.getItems().add(((String) c));
+      for (Object c : currencies) newTransferCurrencyChoiceBox.getItems().add(((String) c));
     } catch (HibernateException e) {
       e.printStackTrace();
     }
-    currencyChoiceBox.setValue("PLN");
+    newTransferCurrencyChoiceBox.setValue("PLN");
+  }
+
+  private void showAlert(String message) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText(message);
+    alert.setContentText("Please, try again");
+    alert.showAndWait();
+  }
+
+  private boolean isAccountNumber(String accountNumber) {
+    try {
+      if (new BigInteger(accountNumber).compareTo(new BigInteger("0")) < 0) {
+        throw new NumberFormatException();
+      }
+    } catch (NumberFormatException nfe) {
+      showAlert("Value in field receiver account number isn't a proper number");
+      return false;
+    }
+    if (accountNumber.length() != 26) {
+      showAlert("Receiver account number should have 26 digits.");
+      return false;
+    }
+    return true;
   }
 }
