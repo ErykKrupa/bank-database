@@ -2,6 +2,7 @@ package dochniak_krupa.controller;
 
 import dochniak_krupa.database.HibernateUtility;
 import dochniak_krupa.model.*;
+import dochniak_krupa.model.enum_type.AccountType;
 import dochniak_krupa.session.SessionPreferences;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -29,23 +31,35 @@ public class ClientWindowController implements Initializable {
   @FXML private TextField newTransferAmountOfDivisionalCurrencyTextField;
   @FXML private ChoiceBox<String> newTransferCurrencyChoiceBox;
 
-  @FXML private DatePicker transferHistoryDateFrom = new DatePicker();
-  @FXML private DatePicker transferHistoryDateTo = new DatePicker();
-  @FXML private TextField transferHistoryReceiverAccountNumber = new TextField();
+  @FXML private DatePicker transferHistoryDateFrom;
+  @FXML private DatePicker transferHistoryDateTo;
+  @FXML private TextField transferHistoryReceiverAccountNumber;
 
-  @FXML private TextArea transferHistoryLogAmount = new TextArea();
-  @FXML private TextArea transferHistoryLogCurrencyIso = new TextArea();
-  @FXML private TextArea transferHistoryLogReceiverAccountNumber = new TextArea();
-  @FXML private TextArea transferHistoryLogTransactionTime = new TextArea();
+  @FXML private TextArea transferHistoryLogAmount;
+  @FXML private TextArea transferHistoryLogCurrencyIso;
+  @FXML private TextArea transferHistoryLogReceiverAccountNumber;
+  @FXML private TextArea transferHistoryLogTransactionTime;
 
   @FXML private TextArea listOfCardsTxtArea;
+
+  @FXML private TextField myAccountPeselTextField;
+  @FXML private ChoiceBox<AccountType> myAccountAccountTypeChoiceBox;
+  @FXML private TextField myAccountFirstNameTextField;
+  @FXML private TextField myAccountLastTextField;
+  @FXML private DatePicker myAccountBirthDateDatePicker;
+  @FXML private TextField myAccountPhoneNumberTextField;
+  @FXML private TextField myAccountEmailTextField;
+  @FXML private TextField myAccountLoginTextField;
+  @FXML private PasswordField myAccountPasswordTextField;
+
+  private static String myAccountNumber;
 
   @FXML
   private void onAccountBalanceTabClick() {
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
       String query = "FROM AccountCurrency WHERE account_number=:accNum";
       Query sqlQuery = session.createQuery(query);
-      sqlQuery.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
+      sqlQuery.setParameter("accNum", myAccountNumber);
       List accountInfo = sqlQuery.list();
       StringBuilder amountString = new StringBuilder();
       StringBuilder currencyString = new StringBuilder();
@@ -69,9 +83,8 @@ public class ClientWindowController implements Initializable {
 
   @FXML
   private void onTransferCommit() {
-    String senderAccountNumber = SessionPreferences.pref.get("account_number", "user");
     String receiverAccountNumber = newTransferReceiverAccountTxtField.getText();
-    if (senderAccountNumber.equals(receiverAccountNumber)) {
+    if (myAccountNumber.equals(receiverAccountNumber)) {
       showAlert("Receiver account number is equal to sender account number.");
       return;
     }
@@ -102,7 +115,8 @@ public class ClientWindowController implements Initializable {
       return;
     }
 
-    BigInteger value = new BigInteger(newTransferAmountOfMoneyTxtField.getText() + "00")
+    BigInteger value =
+        new BigInteger(newTransferAmountOfMoneyTxtField.getText() + "00")
             .add(new BigInteger(newTransferAmountOfDivisionalCurrencyTextField.getText()));
 
     try {
@@ -114,8 +128,6 @@ public class ClientWindowController implements Initializable {
       return;
     }
 
-
-
     Transaction tx = null;
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
       tx = session.beginTransaction();
@@ -123,7 +135,7 @@ public class ClientWindowController implements Initializable {
       Query query =
           session.createQuery(
               "FROM AccountCurrency WHERE account_number=:number AND currency_iso=:iso");
-      query.setParameter("number", senderAccountNumber);
+      query.setParameter("number", myAccountNumber);
       query.setParameter("iso", newTransferCurrencyChoiceBox.getValue());
       AccountCurrency senderAC = (AccountCurrency) query.list().get(0);
 
@@ -145,7 +157,7 @@ public class ClientWindowController implements Initializable {
       receiverAC.setBalance(receiverAC.getBalance().add(value));
 
       TransferLog transferLog = new TransferLog();
-      transferLog.setSenderAccountNumber(senderAccountNumber);
+      transferLog.setSenderAccountNumber(myAccountNumber);
       transferLog.setReceiverAccountNumber(receiverAccountNumber);
       transferLog.setCurrencyIso(newTransferCurrencyChoiceBox.getValue());
       transferLog.setAmount(value);
@@ -153,14 +165,6 @@ public class ClientWindowController implements Initializable {
       session.update(senderAC);
       session.update(receiverAC);
       session.save(transferLog);
-
-//
-//      Query query2 = session.createQuery("FROM AccountCurrency WHERE account_number=:number AND currency_iso=:iso");
-//      query2.setParameter("number", tlog.getReceiverAccountNumber());
-//      query2.setParameter("iso", newTransferCurrencyChoiceBox.getValue());
-//      List receiver = query2.list();
-//      AccountCurrency receiverAC = (AccountCurrency) receiver.get(0);
-//      receiverAC.setBalance(receiverAC.getBalance().add(tlog.getAmount()));
 
       tx.commit();
     } catch (HibernateException e) {
@@ -222,12 +226,13 @@ public class ClientWindowController implements Initializable {
     }
   }
 
+  @FXML
   private void listAllCardsIntoTxtArea() {
     listOfCardsTxtArea.clear();
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
       String query = "FROM CreditCard WHERE account_number=:accNum";
       Query sqlQuery = session.createQuery(query);
-      sqlQuery.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
+      sqlQuery.setParameter("accNum", myAccountNumber);
       List cards = sqlQuery.list();
       if (cards.iterator().hasNext()) listOfCardsTxtArea.appendText("Credit Cards:" + "\n");
       for (Object c : cards) {
@@ -243,7 +248,7 @@ public class ClientWindowController implements Initializable {
 
       String query2 = "FROM DebitCard WHERE account_number=:accNum";
       Query sqlQuery2 = session.createQuery(query2);
-      sqlQuery2.setParameter("accNum", SessionPreferences.pref.get("account_number", "client"));
+      sqlQuery2.setParameter("accNum", myAccountNumber);
       List debitCards = sqlQuery2.list();
       if (debitCards.iterator().hasNext()) {
         listOfCardsTxtArea.appendText(
@@ -265,20 +270,63 @@ public class ClientWindowController implements Initializable {
     }
   }
 
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    loadChoiceBoxData();
-    listAllCardsIntoTxtArea();
+  @FXML
+  void onSaveInMyAccountClick() {
+    Transaction tx = null;
+    try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+      tx = session.beginTransaction();
+      Client client = new Client();
+      client.setAccountNumber(myAccountNumber);
+      client.setPesel(myAccountPeselTextField.getText());
+      client.setAccountType(myAccountAccountTypeChoiceBox.getValue());
+      client.setFirstName(myAccountFirstNameTextField.getText());
+      client.setLastName(myAccountLastTextField.getText());
+      client.setBirthDate(
+          new Date(
+              new SimpleDateFormat("dd.MM.yyyy")
+                  .parse(myAccountBirthDateDatePicker.getEditor().getText())
+                  .getTime() + 43200000));
+      client.setPhoneNumber(myAccountPhoneNumberTextField.getText());
+      client.setEmail(myAccountEmailTextField.getText());
+      client.setLogin(myAccountLoginTextField.getText());
+      client.setPassword(myAccountPasswordTextField.getText());
+      session.update(client);
+      tx.commit();
+    } catch (HibernateException ex) {
+      if (tx != null) {
+        tx.rollback();
+      }
+      showAlert("Cannot execute this operation.");
+    } catch (Exception ex) {
+      showAlert("Cannot execute this operation.");
+    }
   }
 
-  private void loadChoiceBoxData() {
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    myAccountNumber = SessionPreferences.pref.get("account_number", "user");
+
+    myAccountAccountTypeChoiceBox.getItems().add(AccountType.standard);
+    myAccountAccountTypeChoiceBox.getItems().add(AccountType.savings);
+    myAccountAccountTypeChoiceBox.setValue(AccountType.standard);
+
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-      List currencies = session.createQuery("SELECT iso FROM Currency").list();
-      for (Object c : currencies) newTransferCurrencyChoiceBox.getItems().add(((String) c));
+      Query query = session.createQuery("FROM AccountCurrency WHERE account_number=:accNum");
+      query.setParameter("accNum", myAccountNumber);
+      List currencies = query.list();
+      for (int i = 0; i < currencies.size(); i++) {
+        newTransferCurrencyChoiceBox
+            .getItems()
+            .add(((AccountCurrency) currencies.get(i)).getCurrency().getIso());
+      }
     } catch (HibernateException e) {
       e.printStackTrace();
     }
-    newTransferCurrencyChoiceBox.setValue("PLN");
+    if (newTransferCurrencyChoiceBox.getItems().size() != 0) {
+      newTransferCurrencyChoiceBox.setValue(newTransferCurrencyChoiceBox.getItems().get(0));
+    }
+
+    onAccountBalanceTabClick();
   }
 
   private void showAlert(String message) {

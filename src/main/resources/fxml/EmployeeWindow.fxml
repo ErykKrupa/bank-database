@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ChoiceBox?>
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="381.0"
          prefWidth="645.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121"
          xmlns:fx="http://javafx.com/fxml/1" fx:controller="dochniak_krupa.controller.EmployeeWindowController">
@@ -70,15 +71,14 @@
                                                 GridPane.valignment="CENTER"/>
                                         <TextField fx:id="addClientPesel" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="0"/>
-                                        <TextField fx:id="addClientAccountType" text="we can add drop down list here"
-                                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <ChoiceBox fx:id="addClientAccountType" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="1" />
                                         <TextField fx:id="addClientFirstName" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="2"/>
                                         <TextField fx:id="addClientLastName" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="3"/>
-                                        <TextField fx:id="addClientBirthDate"
-                                                   text="we can add here a drop down list to choose a date"
-                                                   GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                        <DatePicker fx:id="addClientBirthDate" GridPane.columnIndex="1"
+                                                    GridPane.rowIndex="4"/>
                                         <TextField fx:id="addClientPhoneNumber" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="5"/>
                                         <TextField fx:id="addClientEmail" GridPane.columnIndex="1"
@@ -160,15 +160,14 @@
                                                    GridPane.rowIndex="0"/>
                                         <TextField fx:id="updateClientPesel" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="1"/>
-                                        <TextField fx:id="updateClientAccountType" text="we can add drop down list here"
-                                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <ChoiceBox fx:id="updateClientAccountType" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="2" />
                                         <TextField fx:id="updateClientFirstName" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="3"/>
                                         <TextField fx:id="updateClientLastName" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="4"/>
-                                        <TextField fx:id="updateClientBirthDate"
-                                                   text="we can add here a drop down list to choose a date"
-                                                   GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                        <DatePicker fx:id="updateClientBirthDate" GridPane.columnIndex="1"
+                                                    GridPane.rowIndex="5"/>
                                         <TextField fx:id="updateClientPhoneNumber" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="6"/>
                                         <TextField fx:id="updateClientEmail" GridPane.columnIndex="1"

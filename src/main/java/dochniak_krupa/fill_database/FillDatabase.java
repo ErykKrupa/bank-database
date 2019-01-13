@@ -5,12 +5,12 @@ import dochniak_krupa.database.HibernateUtility;
 import dochniak_krupa.model.*;
 import dochniak_krupa.model.enum_type.AccessType;
 import dochniak_krupa.model.enum_type.AccountType;
+import dochniak_krupa.model.Employee;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -53,7 +53,7 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -76,8 +76,8 @@ public class FillDatabase {
 
         cc.setFundsLimit(new BigInteger(String.valueOf(random.nextInt(100) * 100000 + 100000)));
         cc.setUsedFunds(
-            new BigInteger(
-                String.valueOf(random.nextInt(Integer.parseInt(cc.getFundsLimit().toString())))));
+                new BigInteger(
+                        String.valueOf(random.nextInt(Integer.parseInt(cc.getFundsLimit().toString())))));
 
         session.save(cc);
         tx.commit();
@@ -111,7 +111,7 @@ public class FillDatabase {
 
       tx.commit();
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -133,7 +133,7 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -152,10 +152,10 @@ public class FillDatabase {
         c.setLastName(faker.name().lastName());
         c.setPhoneNumber(generateNumber(9));
         c.setEmail(
-            c.getFirstName().replace("'", "")
-                + c.getLastName().replace("'", "")
-                + random.nextInt(100)
-                + "@domain.com");
+                c.getFirstName().replace("'", "")
+                        + c.getLastName().replace("'", "")
+                        + random.nextInt(100)
+                        + "@domain.com");
         c.setLogin(generateNumber(8));
         c.setPassword(faker.code().asin());
         c.setActive(generateIsActiveValue());
@@ -164,7 +164,7 @@ public class FillDatabase {
         session.save(c);
         tx.commit();
       } catch (HibernateException e) {
-         e.printStackTrace();
+        e.printStackTrace();
       }
     }
   }
@@ -182,24 +182,24 @@ public class FillDatabase {
         em.setLastName(faker.name().lastName());
         em.setPhoneNumber(generateNumber(9));
         em.setEmail(
-            em.getFirstName().replace("'", "")
-                + em.getLastName().replace("'", "")
-                + random.nextInt(100)
-                + "@bankemployee.com");
+                em.getFirstName().replace("'", "")
+                        + em.getLastName().replace("'", "")
+                        + random.nextInt(100)
+                        + "@bankemployee.com");
         em.setPosition(generatePosition());
         if (em.getPosition().equals("CEO")) em.setAccess(AccessType.CEO);
         else em.setAccess(AccessType.common);
         em.setSalary(generateSalary(em.getPosition()));
         em.setLogin(generateNumber(8));
         em.setPassword(faker.code().asin());
-        em.setWorking(generateIsActiveValue());
+        em.setActive(generateIsActiveValue());
         em.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
 
         session.save(em);
 
         tx.commit();
       } catch (HibernateException e) {
-         e.printStackTrace();
+        e.printStackTrace();
       }
     }
   }
@@ -227,7 +227,7 @@ public class FillDatabase {
         tx.commit();
       }
     } catch (HibernateException e) {
-       e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -250,11 +250,11 @@ public class FillDatabase {
     String b = d.toString();
     StringBuilder sb = new StringBuilder();
     sb.append(b.charAt(2))
-        .append(b.charAt(3))
-        .append(b.charAt(5))
-        .append(b.charAt(6))
-        .append(b.charAt(8))
-        .append(b.charAt(9));
+            .append(b.charAt(3))
+            .append(b.charAt(5))
+            .append(b.charAt(6))
+            .append(b.charAt(8))
+            .append(b.charAt(9));
 
     String n = generateNumber(5);
 
@@ -277,30 +277,30 @@ public class FillDatabase {
   private static BigInteger generateSalary(String position) {
     switch (position) {
       case "Office worker":
-        {
-          int salary = random.nextInt(3000) * 10000 + 230000;
-          return new BigInteger(String.valueOf(salary));
-        }
+      {
+        int salary = random.nextInt(3000) * 10000 + 230000;
+        return new BigInteger(String.valueOf(salary));
+      }
       case "Customer advisor":
-        {
-          int salary = random.nextInt(1500) * 10000 + 230000;
-          return new BigInteger(String.valueOf(salary));
-        }
+      {
+        int salary = random.nextInt(1500) * 10000 + 230000;
+        return new BigInteger(String.valueOf(salary));
+      }
       case "Manager":
-        {
-          int salary = random.nextInt(5000) * 10000 + 400000;
-          return new BigInteger(String.valueOf(salary));
-        }
+      {
+        int salary = random.nextInt(5000) * 10000 + 400000;
+        return new BigInteger(String.valueOf(salary));
+      }
       case "Director":
-        {
-          int salary = random.nextInt(10000) * 10000 + 1000000;
-          return new BigInteger(String.valueOf(salary));
-        }
+      {
+        int salary = random.nextInt(10000) * 10000 + 1000000;
+        return new BigInteger(String.valueOf(salary));
+      }
       default:
-        {
-          int salary = random.nextInt(1000) * 1000 + 230000;
-          return new BigInteger(String.valueOf(salary));
-        }
+      {
+        int salary = random.nextInt(1000) * 1000 + 230000;
+        return new BigInteger(String.valueOf(salary));
+      }
     }
   }
 

@@ -63,7 +63,7 @@ public class Employee {
 
   @Column(name = "is_working")
   @NotNull
-  private boolean isWorking;
+  private boolean isActive;
 
   @Column(name = "log_time")
   @NotNull
@@ -165,12 +165,12 @@ public class Employee {
     this.password = password;
   }
 
-  public boolean isWorking() {
-    return isWorking;
+  public boolean isActive() {
+    return isActive;
   }
 
-  public void setWorking(boolean working) {
-    isWorking = working;
+  public void setActive(boolean active) {
+    isActive = active;
   }
 
   public Timestamp getLogTime() {

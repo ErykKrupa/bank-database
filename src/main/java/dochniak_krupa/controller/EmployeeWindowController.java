@@ -6,24 +6,29 @@ import dochniak_krupa.model.CreditCard;
 import dochniak_krupa.model.DebitCard;
 import dochniak_krupa.model.enum_type.AccountType;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.net.URL;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.ResourceBundle;
 
-public class EmployeeWindowController {
+public class EmployeeWindowController implements Initializable {
   private static Random random = new Random();
 
   @FXML private TextField addClientPesel = new TextField();
-  @FXML private TextField addClientAccountType = new TextField();
+  @FXML private ChoiceBox<AccountType> addClientAccountType = new ChoiceBox<>();
   @FXML private TextField addClientFirstName = new TextField();
   @FXML private TextField addClientLastName = new TextField();
-  @FXML private TextField addClientBirthDate = new TextField();
+  @FXML private DatePicker addClientBirthDate = new DatePicker();
   @FXML private TextField addClientPhoneNumber = new TextField();
   @FXML private TextField addClientEmail = new TextField();
   @FXML private TextField addClientLogin = new TextField();
@@ -33,10 +38,10 @@ public class EmployeeWindowController {
 
   @FXML private TextField updateClientAccountNumber = new TextField();
   @FXML private TextField updateClientPesel = new TextField();
-  @FXML private TextField updateClientAccountType = new TextField();
+  @FXML private ChoiceBox<AccountType> updateClientAccountType = new ChoiceBox<>();
   @FXML private TextField updateClientFirstName = new TextField();
   @FXML private TextField updateClientLastName = new TextField();
-  @FXML private TextField updateClientBirthDate = new TextField();
+  @FXML private DatePicker updateClientBirthDate = new DatePicker();
   @FXML private TextField updateClientPhoneNumber = new TextField();
   @FXML private TextField updateClientEmail = new TextField();
   @FXML private TextField updateClientLogin = new TextField();
@@ -54,6 +59,16 @@ public class EmployeeWindowController {
   @FXML private RadioButton creditCardDeleteRadioButton = new RadioButton();
   @FXML private RadioButton debitCardDeleteRadioButton = new RadioButton();
 
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    addClientAccountType.getItems().add(AccountType.standard);
+    addClientAccountType.getItems().add(AccountType.savings);
+    addClientAccountType.setValue(AccountType.standard);
+    updateClientAccountType.getItems().add(AccountType.standard);
+    updateClientAccountType.getItems().add(AccountType.savings);
+    updateClientAccountType.setValue(AccountType.standard);
+  }
+
   @FXML
   void createClientAccount() {
     boolean isExecuted = true;
@@ -63,10 +78,15 @@ public class EmployeeWindowController {
       Client client = new Client();
       client.setAccountNumber(generateNumber(26));
       client.setPesel(addClientPesel.getText());
-      client.setAccountType(AccountType.standard);
+      client.setAccountType(addClientAccountType.getValue());
       client.setFirstName(addClientFirstName.getText());
       client.setLastName(addClientLastName.getText());
-      client.setBirthDate(new Date(1990, 1, 1));
+      client.setBirthDate(
+          new Date(
+              new SimpleDateFormat("dd.MM.yyyy")
+                      .parse(addClientBirthDate.getEditor().getText())
+                      .getTime()
+                  + 43200000));
       client.setPhoneNumber(addClientPhoneNumber.getText());
       client.setEmail(addClientEmail.getText());
       client.setLogin(addClientLogin.getText());
@@ -91,7 +111,12 @@ public class EmployeeWindowController {
     try (Session session = HibernateUtility.getSessionFactory().openSession()) {
       tx = session.beginTransaction();
       Client client = session.get(Client.class, deleteClientAccountNumber.getText());
-      session.delete(client);
+      if (!client.isActive()) {
+        throw new Exception();
+      }
+      client.setActive(false);
+      client.setLogTime(new Timestamp(System.currentTimeMillis() + 3600000));
+      session.update(client);
       tx.commit();
     } catch (HibernateException ex) {
       if (tx != null) {
@@ -113,10 +138,15 @@ public class EmployeeWindowController {
       Client client = new Client();
       client.setAccountNumber(updateClientAccountNumber.getText());
       client.setPesel(updateClientPesel.getText());
-      client.setAccountType(AccountType.standard);
+      client.setAccountType(updateClientAccountType.getValue());
       client.setFirstName(updateClientFirstName.getText());
       client.setLastName(updateClientLastName.getText());
-      client.setBirthDate(new Date(1990, 1, 1));
+      client.setBirthDate(
+          new Date(
+              new SimpleDateFormat("dd.MM.yyyy")
+                      .parse(updateClientBirthDate.getEditor().getText())
+                      .getTime()
+                  + 43200000));
       client.setPhoneNumber(updateClientPhoneNumber.getText());
       client.setEmail(updateClientEmail.getText());
       client.setLogin(updateClientLogin.getText());
