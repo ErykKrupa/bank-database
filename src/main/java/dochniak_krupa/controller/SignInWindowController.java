@@ -22,9 +22,9 @@ import java.util.ResourceBundle;
 
 public class SignInWindowController implements Initializable {
 
-	@FXML private TextField loginTxtField;
-	@FXML private TextField passwordTxtField;
-	@FXML private ChoiceBox<String> typeOfAccountChoiceBox;
+  @FXML private TextField loginTxtField;
+  @FXML private TextField passwordTxtField;
+  @FXML private ChoiceBox<String> typeOfAccountChoiceBox;
 
   @FXML
   private void onSignInBtnClick() {
@@ -32,17 +32,18 @@ public class SignInWindowController implements Initializable {
       String windowToDisplay = validateSignIn(typeOfAccountChoiceBox.getValue());
       saveClientAccountNumberToSession();
       displayProperWindow(windowToDisplay);
+      displayProperWindow("");
     } catch (IllegalArgumentException e) {
       loginTxtField.setText("");
       passwordTxtField.setText("");
 
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Incorrect credentials");
-			alert.setHeaderText("Your login or password are incorrect!");
-			alert.setContentText("Please, try again!");
-			alert.showAndWait();
-		}
-	}
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Incorrect credentials");
+      alert.setHeaderText("Your login or password are incorrect!");
+      alert.setContentText("Please, try again!");
+      alert.showAndWait();
+    }
+  }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -50,10 +51,10 @@ public class SignInWindowController implements Initializable {
     HibernateUtility.setSessionFactory("loginuser", "loginuserpassword");
   }
 
-	private void loadCheckboxData() {
-		typeOfAccountChoiceBox.setValue("Client");
-		typeOfAccountChoiceBox.getItems().addAll("Client", "Employee");
-	}
+  private void loadCheckboxData() {
+    typeOfAccountChoiceBox.setValue("Client");
+    typeOfAccountChoiceBox.getItems().addAll("Client", "Employee");
+  }
 
   // checks if credentials exist in DB and returns value of window to display
   private String validateSignIn(String user) throws IllegalArgumentException {
@@ -61,7 +62,8 @@ public class SignInWindowController implements Initializable {
       String login = loginTxtField.getText();
       String password = passwordTxtField.getText();
       if (user.equals("Client")) {
-        Query sqlQuery = session.createQuery("SELECT password FROM Client WHERE login=:login AND isActive=true");
+        Query sqlQuery =
+            session.createQuery("SELECT password FROM Client WHERE login=:login AND isActive=true");
         sqlQuery.setParameter("login", login);
         List userPassword = sqlQuery.list();
         if (!userPassword.iterator().hasNext()) throw new IllegalArgumentException();
@@ -92,7 +94,8 @@ public class SignInWindowController implements Initializable {
                 return "CEO";
               case "admin":
                 return "Admin";
-                default: return "Employee";
+              default:
+                return "Employee";
             }
           }
         }
@@ -108,28 +111,27 @@ public class SignInWindowController implements Initializable {
     HibernateUtility.setSessionFactory(login, password);
   }
 
-  private void saveClientAccountNumberToSession(){
-    try(Session session = HibernateUtility.getSessionFactory().openSession()){
-      Query sqlQuery2 =
-              session.createQuery("SELECT accountNumber FROM Client WHERE login=:login");
-      sqlQuery2.setParameter("login", SessionPreferences.pref.get("login","client"));
+  private void saveClientAccountNumberToSession() {
+    try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+      Query sqlQuery2 = session.createQuery("SELECT accountNumber FROM Client WHERE login=:login");
+      sqlQuery2.setParameter("login", SessionPreferences.pref.get("login", "client"));
       List accNumber = sqlQuery2.list();
       SessionPreferences.pref.put("account_number", accNumber.get(0).toString());
-    }catch (HibernateException e){
+    } catch (HibernateException e) {
       e.printStackTrace();
     }
   }
 
-	// loads proper fxml file depending on given parameter
-	private void displayProperWindow(String user) {
-		try {
-			Parent p = FXMLLoader.load(getClass().getResource("/fxml/" + user + "Window.fxml"));
-			Stage stage = new Stage();
-			stage.setTitle("Banking app");
-			stage.setScene(new Scene(p));
-			stage.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+  // loads proper fxml file depending on given parameter
+  private void displayProperWindow(String user) {
+    try {
+      Parent p = FXMLLoader.load(getClass().getResource("/fxml/" + user + "Window.fxml"));
+      Stage stage = new Stage();
+      stage.setTitle("Banking app");
+      stage.setScene(new Scene(p));
+      stage.show();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }
