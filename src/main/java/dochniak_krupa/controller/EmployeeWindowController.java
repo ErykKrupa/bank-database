@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -91,6 +92,7 @@ public class EmployeeWindowController implements Initializable {
       client.setEmail(addClientEmail.getText());
       client.setLogin(addClientLogin.getText());
       client.setPassword(addClientPassword.getText());
+      client.setPassword(BCrypt.hashpw(addClientPassword.getText(), BCrypt.gensalt()));
       session.save(client);
       tx.commit();
     } catch (HibernateException ex) {
@@ -150,7 +152,7 @@ public class EmployeeWindowController implements Initializable {
       client.setPhoneNumber(updateClientPhoneNumber.getText());
       client.setEmail(updateClientEmail.getText());
       client.setLogin(updateClientLogin.getText());
-      client.setPassword(updateClientPassword.getText());
+      client.setPassword(BCrypt.hashpw(updateClientPassword.getText(), BCrypt.gensalt()));
       session.update(client);
       tx.commit();
     } catch (HibernateException ex) {
