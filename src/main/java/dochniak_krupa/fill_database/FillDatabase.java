@@ -25,12 +25,12 @@ public class FillDatabase {
 
   public static void main(String[] args) {
     HibernateUtility.setSessionFactory("root", "root123");
-    fillCurrencies();
-    fillClientsWithEncryptedPasswordsAndBDAccounts(50);
-    fillCreditCards();
-    fillDebitCards();
-    fillAccountCurrencies();
-    fillTransactions(10000);
+//    fillCurrencies();
+//    fillClientsWithEncryptedPasswordsAndBDAccounts(50);
+//    fillCreditCards();
+//    fillDebitCards();
+//    fillAccountCurrencies();
+//    fillTransactions(10000);
     fillEmployeesWithEncryptedPasswordsAndDBAccounts(50);
     //           fillClients(2);
     //           fillEmployees(1);
@@ -296,6 +296,9 @@ public class FillDatabase {
             .createSQLQuery(
                 "GRANT INSERT, DELETE ON bank.debit_card TO `" + login + "`@`localhost`;")
             .executeUpdate();
+        session
+                .createSQLQuery("GRANT SELECT ON bank.currency TO `" + login + "`@`localhost`;")
+                .executeUpdate();
 
         switch (em.getAccess().toString()) {
           case "common":

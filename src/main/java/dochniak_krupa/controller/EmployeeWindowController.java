@@ -1,6 +1,7 @@
 package dochniak_krupa.controller;
 
 import dochniak_krupa.database.HibernateUtility;
+import dochniak_krupa.model.AccountCurrency;
 import dochniak_krupa.model.Client;
 import dochniak_krupa.model.CreditCard;
 import dochniak_krupa.model.DebitCard;
@@ -10,14 +11,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -58,6 +63,11 @@ public class EmployeeWindowController implements Initializable {
   @FXML private TextField deleteCardCardNumber = new TextField();
   @FXML private RadioButton creditCardDeleteRadioButton = new RadioButton();
   @FXML private RadioButton debitCardDeleteRadioButton = new RadioButton();
+
+  @FXML private TextField accountBalanceAccountNumber = new TextField();
+  @FXML private Label accountBalanceAmount = new Label();
+  @FXML private Label accountBalanceCurrency = new Label();
+
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -228,6 +238,34 @@ public class EmployeeWindowController implements Initializable {
       }
     }
   }
+
+  @FXML
+  void showAccountBalance() {
+    try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+      Query sqlQuery = session.createQuery("FROM AccountCurrency WHERE account_number=:accNum");
+      sqlQuery.setParameter("accNum", accountBalanceAccountNumber.getText());
+      List accountInfo = sqlQuery.list();
+      StringBuilder amountString = new StringBuilder();
+      StringBuilder currencyString = new StringBuilder();
+      for (int i = 0; i < accountInfo.size(); i++) {
+        amountString
+                .append(
+                        new BigDecimal(((AccountCurrency) accountInfo.get(i)).getBalance().toString())
+                                .divide(new BigDecimal("100"))
+                                .setScale(2, RoundingMode.DOWN))
+                .append(System.lineSeparator());
+        currencyString
+                .append(((AccountCurrency) accountInfo.get(i)).getCurrency().getIso())
+                .append(System.lineSeparator());
+      }
+      accountBalanceAmount.setText(amountString.toString());
+      accountBalanceCurrency.setText(currencyString.toString());
+    } catch (HibernateException e) {
+      e.printStackTrace();
+    }
+
+  }
+
 
   @FXML
   void createCard() {
