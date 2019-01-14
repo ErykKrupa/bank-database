@@ -1,10 +1,7 @@
 package dochniak_krupa.controller;
 
 import dochniak_krupa.database.HibernateUtility;
-import dochniak_krupa.model.AccountCurrency;
-import dochniak_krupa.model.Client;
-import dochniak_krupa.model.CreditCard;
-import dochniak_krupa.model.DebitCard;
+import dochniak_krupa.model.*;
 import dochniak_krupa.model.enum_type.AccountType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +17,7 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -51,11 +49,25 @@ public class EmployeeWindowController implements Initializable {
   @FXML private TextField updateClientEmail = new TextField();
   @FXML private TextField updateClientLogin = new TextField();
   @FXML private PasswordField updateClientPassword = new PasswordField();
+
   @FXML private TextField searchClientAccountNumber = new TextField();
   @FXML private TextField searchClientPhoneNumber = new TextField();
   @FXML private TextField searchClientPesel = new TextField();
   @FXML private TextField searchClientEmail = new TextField();
   @FXML private TextArea searchClientOutput = new TextArea();
+
+  @FXML private TextField accountBalanceAccountNumber = new TextField();
+  @FXML private Label accountBalanceAmount = new Label();
+  @FXML private Label accountBalanceCurrency = new Label();
+
+  @FXML private DatePicker transferHistoryDateFrom = new DatePicker();
+  @FXML private DatePicker transferHistoryDateTo = new DatePicker();
+  @FXML private TextField transferHistorySenderAccountNumber = new TextField();
+  @FXML private TextField transferHistoryReceiverAccountNumber = new TextField();
+  @FXML private TextArea transferHistoryLogAmount = new TextArea();
+  @FXML private TextArea transferHistoryLogCurrencyIso = new TextArea();
+  @FXML private TextArea transferHistoryLogReceiverAccountNumber = new TextArea();
+  @FXML private TextArea transferHistoryLogTransactionTime = new TextArea();
 
   @FXML private TextField createCardAccountNumber = new TextField();
   @FXML private RadioButton creditCardGenerateRadioButton = new RadioButton();
@@ -63,11 +75,6 @@ public class EmployeeWindowController implements Initializable {
   @FXML private TextField deleteCardCardNumber = new TextField();
   @FXML private RadioButton creditCardDeleteRadioButton = new RadioButton();
   @FXML private RadioButton debitCardDeleteRadioButton = new RadioButton();
-
-  @FXML private TextField accountBalanceAccountNumber = new TextField();
-  @FXML private Label accountBalanceAmount = new Label();
-  @FXML private Label accountBalanceCurrency = new Label();
-
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -249,23 +256,74 @@ public class EmployeeWindowController implements Initializable {
       StringBuilder currencyString = new StringBuilder();
       for (int i = 0; i < accountInfo.size(); i++) {
         amountString
-                .append(
-                        new BigDecimal(((AccountCurrency) accountInfo.get(i)).getBalance().toString())
-                                .divide(new BigDecimal("100"))
-                                .setScale(2, RoundingMode.DOWN))
-                .append(System.lineSeparator());
+            .append(
+                new BigDecimal(((AccountCurrency) accountInfo.get(i)).getBalance().toString())
+                    .divide(new BigDecimal("100"))
+                    .setScale(2, RoundingMode.DOWN))
+            .append(System.lineSeparator());
         currencyString
-                .append(((AccountCurrency) accountInfo.get(i)).getCurrency().getIso())
-                .append(System.lineSeparator());
+            .append(((AccountCurrency) accountInfo.get(i)).getCurrency().getIso())
+            .append(System.lineSeparator());
       }
       accountBalanceAmount.setText(amountString.toString());
       accountBalanceCurrency.setText(currencyString.toString());
     } catch (HibernateException e) {
       e.printStackTrace();
     }
-
   }
 
+  @FXML
+  void showTransferHistory() {
+    try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+      if (!(isAccountNumber(transferHistoryReceiverAccountNumber.getText())
+          && isAccountNumber(transferHistorySenderAccountNumber.getText()))) {
+      	showAlert(false);
+        return;
+      }
+      Query query =
+          session.createQuery(
+              "FROM TransferLog WHERE senderAccountNumber =: senderAccountNumber AND receiverAccountNumber =: receiverAccountNumber AND transactionTime >=: transactionTimeFrom  AND transactionTime <=: transactionTimeTo");
+      query.setParameter("senderAccountNumber", transferHistorySenderAccountNumber.getText());
+      query.setParameter("receiverAccountNumber", transferHistoryReceiverAccountNumber.getText());
+      try {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        query.setParameter(
+            "transactionTimeFrom", sdf.parse(transferHistoryDateFrom.getEditor().getText()));
+        query.setParameter(
+            "transactionTimeTo", sdf.parse(transferHistoryDateTo.getEditor().getText()));
+      } catch (ParseException pe) {
+        pe.printStackTrace();
+      }
+      List transferLogInfo = query.list();
+      StringBuilder amountString = new StringBuilder();
+      StringBuilder currencyIsoString = new StringBuilder();
+      StringBuilder receiverAccountNumberString = new StringBuilder();
+      StringBuilder transactionTimeString = new StringBuilder();
+
+      for (int i = 0; i < transferLogInfo.size(); i++) {
+        amountString
+            .append(
+                new BigDecimal(((TransferLog) transferLogInfo.get(i)).getAmount().toString())
+                    .divide(new BigDecimal("100"))
+                    .setScale(2, RoundingMode.DOWN))
+            .append(System.lineSeparator());
+        currencyIsoString
+            .append(((TransferLog) transferLogInfo.get(i)).getCurrencyIso())
+            .append(System.lineSeparator());
+        receiverAccountNumberString
+            .append(((TransferLog) transferLogInfo.get(i)).getReceiverAccountNumber())
+            .append(System.lineSeparator());
+        transactionTimeString
+            .append(((TransferLog) transferLogInfo.get(i)).getTransactionTime().toString(), 0, 16)
+            .append(System.lineSeparator());
+      }
+      transferHistoryLogAmount.setText(amountString.toString());
+      transferHistoryLogCurrencyIso.setText(currencyIsoString.toString());
+      transferHistoryLogReceiverAccountNumber.setText(receiverAccountNumberString.toString());
+      transferHistoryLogTransactionTime.setText(transactionTimeString.toString());
+      showAlert(true);
+    }
+  }
 
   @FXML
   void createCard() {
@@ -284,7 +342,7 @@ public class EmployeeWindowController implements Initializable {
                 Calendar.getInstance().get(Calendar.YEAR) + 2,
                 Calendar.getInstance().get(Calendar.MONTH) + 6,
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH)));
-        creditCard.setFundsLimit(new BigInteger("1500"));
+        creditCard.setFundsLimit(new BigInteger("150000"));
         creditCard.setUsedFunds(new BigInteger("0"));
         session.save(creditCard);
       } else {
@@ -344,6 +402,17 @@ public class EmployeeWindowController implements Initializable {
     }
     return stringBuilder.toString();
   }
+
+	private boolean isAccountNumber(String accountNumber) {
+		try {
+			if (new BigInteger(accountNumber).compareTo(new BigInteger("0")) < 0) {
+				return false;
+			}
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return accountNumber.length() == 26;
+	}
 
   private static void showAlert(boolean isExecuted) {
     Alert alert;

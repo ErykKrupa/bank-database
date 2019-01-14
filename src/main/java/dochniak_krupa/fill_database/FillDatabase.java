@@ -190,10 +190,10 @@ public class FillDatabase {
         String sql4 = "GRANT SELECT ON bank.currency TO `" + login + "`@`localhost`;";
         Query q4 = session.createSQLQuery(sql4);
         q4.executeUpdate();
-        String sql5 = "GRANT SELECT ON bank.debit_card TO `" + login + "`@`localhost`;";
+        String sql5 = "GRANT SELECT, DELETE ON bank.debit_card TO `" + login + "`@`localhost`;";
         Query q5 = session.createSQLQuery(sql5);
         q5.executeUpdate();
-        String sql6 = "GRANT SELECT ON bank.credit_card TO `" + login + "`@`localhost`;";
+        String sql6 = "GRANT SELECT, DELETE ON bank.credit_card TO `" + login + "`@`localhost`;";
         Query q6 = session.createSQLQuery(sql6);
         q6.executeUpdate();
         String sql7 = "GRANT SELECT, UPDATE ON bank.client TO `" + login + "`@`localhost`;";

@@ -188,14 +188,33 @@
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
-                        <DatePicker layoutX="14.0" layoutY="36.0" promptText="Search from" />
-                        <DatePicker layoutX="14.0" layoutY="69.0" promptText="Search to" />
+                        <DatePicker fx:id="transferHistoryDateFrom" layoutX="14.0" layoutY="36.0" promptText="Search from" />
+                        <DatePicker fx:id="transferHistoryDateTo" layoutX="14.0" layoutY="69.0" promptText="Search to" />
                         <Label layoutX="16.0" layoutY="4.0" prefHeight="28.0" prefWidth="171.0" text="Searching parameters" />
-                        <Button layoutX="16.0" layoutY="197.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="170.0" text="Search" />
+                        <Button layoutX="16.0" layoutY="197.0" mnemonicParsing="false" onMouseClicked="#showTransferHistory" prefHeight="27.0" prefWidth="170.0" text="Search" />
                         <Separator layoutX="194.0" layoutY="9.0" orientation="VERTICAL" prefHeight="356.0" prefWidth="9.0" />
-                        <TextArea layoutX="202.0" layoutY="6.0" prefHeight="355.0" prefWidth="438.0" />
-                        <TextField layoutX="15.0" layoutY="104.0" prefHeight="26.0" prefWidth="172.0" promptText="Sender account number" />
-                        <TextField layoutX="16.0" layoutY="139.0" prefHeight="26.0" prefWidth="172.0" promptText="Receiver account number" />
+                        <TextField fx:id="transferHistorySenderAccountNumber" layoutX="15.0" layoutY="104.0" prefHeight="26.0" prefWidth="172.0" promptText="Sender account number" />
+                        <TextField fx:id="transferHistoryReceiverAccountNumber" layoutX="16.0" layoutY="139.0" prefHeight="26.0" prefWidth="172.0" promptText="Receiver account number" />
+                        <TextArea fx:id="transferHistoryLogAmount" editable="false" layoutX="208.0" layoutY="8.0" prefHeight="341.0" prefWidth="115.0">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                        </TextArea>
+                        <TextArea fx:id="transferHistoryLogCurrencyIso" editable="false" layoutX="322.0" layoutY="8.0" prefHeight="341.0" prefWidth="41.0">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                        </TextArea>
+                        <TextArea fx:id="transferHistoryLogReceiverAccountNumber" editable="false" layoutX="362.0" layoutY="8.0" prefHeight="341.0" prefWidth="168.0">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                        </TextArea>
+                        <TextArea fx:id="transferHistoryLogTransactionTime" editable="false" layoutX="530.0" layoutY="8.0" prefHeight="341.0" prefWidth="101.0">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                        </TextArea>
                     </children>
                 </AnchorPane>
             </content>
