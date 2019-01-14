@@ -1,22 +1,31 @@
 package dochniak_krupa.fill_database;
 
 import com.github.javafaker.Faker;
+import com.smattme.MysqlExportService;
+import com.smattme.MysqlImportService;
 import dochniak_krupa.database.HibernateUtility;
 import dochniak_krupa.model.*;
 import dochniak_krupa.model.enum_type.AccessType;
 import dochniak_krupa.model.enum_type.AccountType;
 import dochniak_krupa.model.Employee;
+import org.apache.log4j.BasicConfigurator;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
 public class FillDatabase {
@@ -33,7 +42,7 @@ public class FillDatabase {
 //    fillTransactions(10000);
     fillEmployeesWithEncryptedPasswordsAndDBAccounts(50);
     //           fillClients(2);
-    //           fillEmployees(1);
+    //           fillEmployees(1);*/
   }
 
   private static void fillDebitCards() {
@@ -168,38 +177,13 @@ public class FillDatabase {
         c.setActive(generateIsActiveValue());
         c.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
 
-        // Creating DB account for that user
-        //        String sql = "CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password
-        // + "';";
-        //        Query q = session.createSQLQuery(sql);
-        session
-            .createSQLQuery(
-                "CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password + "';")
-            .executeUpdate();
-        //        String sql2 = "GRANT SELECT ON bank.account_currency TO `" + login +
-        // "`@`localhost`;";
-        //        Query q2= session.createSQLQuery("GRANT SELECT ON bank.account_currency TO `" +
-        // login + "`@`localhost`;");
-        session
-            .createSQLQuery("GRANT SELECT, UPDATE ON bank.account_currency TO `" + login + "`@`localhost`;")
-            .executeUpdate();
-        String sql3 =
-            "GRANT INSERT, UPDATE, SELECT ON bank.transfer_log TO `" + login + "`@`localhost`;";
-        Query q3 = session.createSQLQuery(sql3);
-        q3.executeUpdate();
-        String sql4 = "GRANT SELECT ON bank.currency TO `" + login + "`@`localhost`;";
-        Query q4 = session.createSQLQuery(sql4);
-        q4.executeUpdate();
-        String sql5 = "GRANT SELECT, DELETE ON bank.debit_card TO `" + login + "`@`localhost`;";
-        Query q5 = session.createSQLQuery(sql5);
-        q5.executeUpdate();
-        String sql6 = "GRANT SELECT, DELETE ON bank.credit_card TO `" + login + "`@`localhost`;";
-        Query q6 = session.createSQLQuery(sql6);
-        q6.executeUpdate();
-        String sql7 = "GRANT SELECT, UPDATE ON bank.client TO `" + login + "`@`localhost`;";
-        Query q7 = session.createSQLQuery(sql7);
-        q7.executeUpdate();
-
+        session.createSQLQuery("CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password + "';").executeUpdate();
+        session.createSQLQuery("GRANT SELECT, UPDATE ON bank.account_currency TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT INSERT, UPDATE, SELECT ON bank.transfer_log TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT ON bank.currency TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT, DELETE  ON bank.debit_card TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT, DELETE  ON bank.credit_card TO `" + login + "`@`localhost`;").executeUpdate();
+        session.createSQLQuery("GRANT SELECT, UPDATE ON bank.client TO `" + login + "`@`localhost`;").executeUpdate();
         session.save(c);
         tx.commit();
       } catch (HibernateException e) {

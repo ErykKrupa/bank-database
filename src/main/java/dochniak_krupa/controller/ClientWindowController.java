@@ -11,6 +11,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -289,7 +290,7 @@ public class ClientWindowController implements Initializable {
       client.setPhoneNumber(myAccountPhoneNumberTextField.getText());
       client.setEmail(myAccountEmailTextField.getText());
       client.setLogin(myAccountLoginTextField.getText());
-      client.setPassword(myAccountPasswordTextField.getText());
+      client.setPassword(BCrypt.hashpw(myAccountPasswordTextField.getText(), BCrypt.gensalt()));
       session.update(client);
       tx.commit();
     } catch (HibernateException ex) {
