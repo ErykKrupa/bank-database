@@ -61,7 +61,7 @@ public class Employee {
   @Size(max = 30)
   private String password;
 
-  @Column(name = "is_working")
+  @Column(name = "is_active")
   @NotNull
   private boolean isActive;
 

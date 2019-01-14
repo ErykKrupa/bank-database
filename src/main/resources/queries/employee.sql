@@ -12,8 +12,8 @@ create table employee
   access           varchar(40)                         not null, /*common, manager, admin*/
   salary           bigint                              not null,
   login            varchar(30) unique                  not null,
-  password         varchar(30)                         not null,
-  is_working       bool                                not null,
+  password         char(60)                            not null,
+  is_active        bool                                not null,
   log_time         datetime                            not null
 );
 select * from employee;

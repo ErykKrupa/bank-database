@@ -185,7 +185,7 @@ public class ClientWindowController implements Initializable {
       Query query =
           session.createQuery(
               "FROM TransferLog WHERE senderAccountNumber =: senderAccountNumber AND receiverAccountNumber =: receiverAccountNumber AND transactionTime >=: transactionTimeFrom  AND transactionTime <=: transactionTimeTo");
-      query.setParameter("senderAccountNumber", "03817114205045539930363904");
+      query.setParameter("senderAccountNumber", myAccountNumber);
       query.setParameter("receiverAccountNumber", transferHistoryReceiverAccountNumber.getText());
       try {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");

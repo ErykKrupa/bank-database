@@ -10,6 +10,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.math.BigInteger;
 import java.sql.Date;
@@ -23,13 +24,16 @@ public class FillDatabase {
   private static Faker faker = new Faker();
 
   public static void main(String[] args) {
+    HibernateUtility.setSessionFactory("root", "root123");
     fillCurrencies();
-    fillClients(10000);
+    fillClientsWithEncryptedPasswordsAndBDAccounts(50);
     fillCreditCards();
     fillDebitCards();
     fillAccountCurrencies();
     fillTransactions(10000);
-    fillEmployees(10000);
+    fillEmployeesWithEncryptedPasswordsAndDBAccounts(50);
+    //           fillClients(2);
+    //           fillEmployees(1);
   }
 
   private static void fillDebitCards() {
@@ -76,8 +80,8 @@ public class FillDatabase {
 
         cc.setFundsLimit(new BigInteger(String.valueOf(random.nextInt(100) * 100000 + 100000)));
         cc.setUsedFunds(
-                new BigInteger(
-                        String.valueOf(random.nextInt(Integer.parseInt(cc.getFundsLimit().toString())))));
+            new BigInteger(
+                String.valueOf(random.nextInt(Integer.parseInt(cc.getFundsLimit().toString())))));
 
         session.save(cc);
         tx.commit();
@@ -137,6 +141,73 @@ public class FillDatabase {
     }
   }
 
+  private static void fillClientsWithEncryptedPasswordsAndBDAccounts(int number) {
+    for (int i = 0; i < number; i++) {
+      try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+        Transaction tx = session.beginTransaction();
+
+        Client c = new Client();
+
+        c.setBirthDate(new Date(faker.date().birthday(18, 75).getTime()));
+        c.setPesel(generatePeselUsingBirthdate(c.getBirthDate()));
+        c.setAccountNumber(generateNumber(26));
+        c.setAccountType(generateAccountType());
+        c.setFirstName(faker.name().firstName());
+        c.setLastName(faker.name().lastName());
+        c.setPhoneNumber(generateNumber(9));
+        c.setEmail(
+            c.getFirstName().replace("'", "")
+                + c.getLastName().replace("'", "")
+                + random.nextInt(100)
+                + "@domain.com");
+        String login = generateNumber(8); // "11111111";
+        c.setLogin(login);
+        String password = faker.code().asin();
+        System.out.println(login + "\t" + password);
+        c.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        c.setActive(generateIsActiveValue());
+        c.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
+
+        // Creating DB account for that user
+        //        String sql = "CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password
+        // + "';";
+        //        Query q = session.createSQLQuery(sql);
+        session
+            .createSQLQuery(
+                "CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password + "';")
+            .executeUpdate();
+        //        String sql2 = "GRANT SELECT ON bank.account_currency TO `" + login +
+        // "`@`localhost`;";
+        //        Query q2= session.createSQLQuery("GRANT SELECT ON bank.account_currency TO `" +
+        // login + "`@`localhost`;");
+        session
+            .createSQLQuery("GRANT SELECT, UPDATE ON bank.account_currency TO `" + login + "`@`localhost`;")
+            .executeUpdate();
+        String sql3 =
+            "GRANT INSERT, UPDATE, SELECT ON bank.transfer_log TO `" + login + "`@`localhost`;";
+        Query q3 = session.createSQLQuery(sql3);
+        q3.executeUpdate();
+        String sql4 = "GRANT SELECT ON bank.currency TO `" + login + "`@`localhost`;";
+        Query q4 = session.createSQLQuery(sql4);
+        q4.executeUpdate();
+        String sql5 = "GRANT SELECT ON bank.debit_card TO `" + login + "`@`localhost`;";
+        Query q5 = session.createSQLQuery(sql5);
+        q5.executeUpdate();
+        String sql6 = "GRANT SELECT ON bank.credit_card TO `" + login + "`@`localhost`;";
+        Query q6 = session.createSQLQuery(sql6);
+        q6.executeUpdate();
+        String sql7 = "GRANT SELECT, UPDATE ON bank.client TO `" + login + "`@`localhost`;";
+        Query q7 = session.createSQLQuery(sql7);
+        q7.executeUpdate();
+
+        session.save(c);
+        tx.commit();
+      } catch (HibernateException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
   private static void fillClients(int number) {
     for (int i = 0; i < number; i++) {
       try (Session session = HibernateUtility.getSessionFactory().openSession()) {
@@ -152,16 +223,103 @@ public class FillDatabase {
         c.setLastName(faker.name().lastName());
         c.setPhoneNumber(generateNumber(9));
         c.setEmail(
-                c.getFirstName().replace("'", "")
-                        + c.getLastName().replace("'", "")
-                        + random.nextInt(100)
-                        + "@domain.com");
-        c.setLogin(generateNumber(8));
-        c.setPassword(faker.code().asin());
+            c.getFirstName().replace("'", "")
+                + c.getLastName().replace("'", "")
+                + random.nextInt(100)
+                + "@domain.com");
+        String login = generateNumber(8);
+        c.setLogin(login);
+        String password = faker.code().asin();
+        c.setPassword(password);
         c.setActive(generateIsActiveValue());
         c.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
 
         session.save(c);
+        tx.commit();
+      } catch (HibernateException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private static void fillEmployeesWithEncryptedPasswordsAndDBAccounts(int number) {
+    for (int i = 0; i < number; i++) {
+      try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+        Transaction tx = session.beginTransaction();
+
+        Employee em = new Employee();
+
+        em.setBirthDate(new Date(faker.date().birthday(18, 60).getTime()));
+        em.setPesel(generatePeselUsingBirthdate(em.getBirthDate()));
+        em.setFirstName(faker.name().firstName());
+        em.setLastName(faker.name().lastName());
+        em.setPhoneNumber(generateNumber(9));
+        em.setEmail(
+            em.getFirstName().replace("'", "")
+                + em.getLastName().replace("'", "")
+                + random.nextInt(100)
+                + "@bankemployee.com");
+        em.setPosition(generatePosition());
+        if (em.getPosition().equals("CEO")) em.setAccess(AccessType.CEO);
+        else em.setAccess(AccessType.common);
+        em.setSalary(generateSalary(em.getPosition()));
+        String login = generateNumber(8); // "11111111";
+        em.setLogin(login);
+        String password = faker.code().asin();
+        System.out.println(login + "\t" + password);
+        em.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        em.setActive(generateIsActiveValue());
+        em.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
+
+        session
+            .createSQLQuery(
+                "CREATE USER `" + login + "`@`localhost` IDENTIFIED BY '" + password + "';")
+            .executeUpdate();
+        session
+            .createSQLQuery("GRANT SELECT ON bank.account_currency TO `" + login + "`@`localhost`;")
+            .executeUpdate();
+        session
+            .createSQLQuery(
+                "GRANT SELECT, INSERT, UPDATE ON bank.client TO `" + login + "`@`localhost`;")
+            .executeUpdate();
+        session
+            .createSQLQuery("GRANT SELECT ON bank.account_currency TO `" + login + "`@`localhost`;")
+            .executeUpdate();
+        session
+            .createSQLQuery("GRANT SELECT ON bank.transfer_log TO `" + login + "`@`localhost`;")
+            .executeUpdate();
+        session
+            .createSQLQuery(
+                "GRANT INSERT, DELETE ON bank.credit_card TO `" + login + "`@`localhost`;")
+            .executeUpdate();
+        session
+            .createSQLQuery(
+                "GRANT INSERT, DELETE ON bank.debit_card TO `" + login + "`@`localhost`;")
+            .executeUpdate();
+
+        switch (em.getAccess().toString()) {
+          case "common":
+            {
+              session
+                  .createSQLQuery(
+                      "GRANT INSERT, UPDATE ON bank.employee TO `" + login + "`@`localhost`;")
+                  .executeUpdate();
+            }
+            break;
+          case "CEO":
+            {
+              session
+                  .createSQLQuery(
+                      "GRANT INSERT, UPDATE, DELETE ON bank.employee TO `"
+                          + login
+                          + "`@`localhost`;")
+                  .executeUpdate();
+            }
+            break;
+        }
+
+        session.save(em);
+
         tx.commit();
       } catch (HibernateException e) {
         e.printStackTrace();
@@ -182,16 +340,18 @@ public class FillDatabase {
         em.setLastName(faker.name().lastName());
         em.setPhoneNumber(generateNumber(9));
         em.setEmail(
-                em.getFirstName().replace("'", "")
-                        + em.getLastName().replace("'", "")
-                        + random.nextInt(100)
-                        + "@bankemployee.com");
+            em.getFirstName().replace("'", "")
+                + em.getLastName().replace("'", "")
+                + random.nextInt(100)
+                + "@bankemployee.com");
         em.setPosition(generatePosition());
         if (em.getPosition().equals("CEO")) em.setAccess(AccessType.CEO);
         else em.setAccess(AccessType.common);
         em.setSalary(generateSalary(em.getPosition()));
-        em.setLogin(generateNumber(8));
-        em.setPassword(faker.code().asin());
+        String login = generateNumber(8);
+        em.setLogin(login);
+        String password = faker.code().asin();
+        em.setPassword(password);
         em.setActive(generateIsActiveValue());
         em.setLogTime(new Timestamp(faker.date().birthday(1, 25).getTime()));
 
@@ -240,21 +400,22 @@ public class FillDatabase {
   }
 
   private static AccountType generateAccountType() {
-    int rand = random.nextInt(7);
-    if (rand <= 3) return AccountType.standard;
-    else if (rand <= 5) return AccountType.savings;
-    else return AccountType.for_kids;
+    if (random.nextBoolean()) {
+      return AccountType.standard;
+    } else {
+      return AccountType.savings;
+    }
   }
 
   private static String generatePeselUsingBirthdate(Date d) {
     String b = d.toString();
     StringBuilder sb = new StringBuilder();
     sb.append(b.charAt(2))
-            .append(b.charAt(3))
-            .append(b.charAt(5))
-            .append(b.charAt(6))
-            .append(b.charAt(8))
-            .append(b.charAt(9));
+        .append(b.charAt(3))
+        .append(b.charAt(5))
+        .append(b.charAt(6))
+        .append(b.charAt(8))
+        .append(b.charAt(9));
 
     String n = generateNumber(5);
 
@@ -277,30 +438,30 @@ public class FillDatabase {
   private static BigInteger generateSalary(String position) {
     switch (position) {
       case "Office worker":
-      {
-        int salary = random.nextInt(3000) * 10000 + 230000;
-        return new BigInteger(String.valueOf(salary));
-      }
+        {
+          int salary = random.nextInt(3000) * 10000 + 230000;
+          return new BigInteger(String.valueOf(salary));
+        }
       case "Customer advisor":
-      {
-        int salary = random.nextInt(1500) * 10000 + 230000;
-        return new BigInteger(String.valueOf(salary));
-      }
+        {
+          int salary = random.nextInt(1500) * 10000 + 230000;
+          return new BigInteger(String.valueOf(salary));
+        }
       case "Manager":
-      {
-        int salary = random.nextInt(5000) * 10000 + 400000;
-        return new BigInteger(String.valueOf(salary));
-      }
+        {
+          int salary = random.nextInt(5000) * 10000 + 400000;
+          return new BigInteger(String.valueOf(salary));
+        }
       case "Director":
-      {
-        int salary = random.nextInt(10000) * 10000 + 1000000;
-        return new BigInteger(String.valueOf(salary));
-      }
+        {
+          int salary = random.nextInt(10000) * 10000 + 1000000;
+          return new BigInteger(String.valueOf(salary));
+        }
       default:
-      {
-        int salary = random.nextInt(1000) * 1000 + 230000;
-        return new BigInteger(String.valueOf(salary));
-      }
+        {
+          int salary = random.nextInt(1000) * 1000 + 230000;
+          return new BigInteger(String.valueOf(salary));
+        }
     }
   }
 
